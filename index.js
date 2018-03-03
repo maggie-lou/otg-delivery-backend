@@ -42,9 +42,8 @@ router.route('/requests')
         request.orderTime = Date.now();
         request.timeFrame = req.body.timeFrame;
 
-		console.log(req.body.requester);
-		console.log(req.body.orderDescription);
-		console.log(req.body.timeFrame); 
+        console.log("REQUEST BODY")
+		console.log(req.body);
 
         //save auction
         request.save(function(err){
@@ -63,19 +62,39 @@ router.route('/requests')
     .get(function(req, res){
         console.log("GET: requests")
     
-        Request.findOne().sort('orderTime').exec(function(err, request) { 
+        Request.find().sort('orderTime').exec(function(err, requests) { 
             
             if (err){
                 res.send(err);
                 console.log(err);
             }
 
-            console.log(request); 
+            // THIS NEEDS TO BE DONE THROUGH MONGO QUERY NOT IN MEMORY 
+            // GOD, PLEASE CLOSE THINE EYES 
+            let validRequests = requests.filter(function(coffeeRequest){
+                //filter out antiquated requests
+                let threshholdMinutes = Number(coffeeRequest.timeFrame);
+                let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion 
+                let msSinceRequest = Date.now() - coffeeRequest.orderTime
 
-            res.json({
-                        'requester': request.requester, 
-                        'orderDescription': request.orderDescription
-                    });
+                return threshholdMs > msSinceRequest;
+            }); 
+
+            //If an active request exists
+            if(validRequests.length > 0){
+
+                let latestRequest = validRequests[validRequests.length - 1];
+
+                res.json({
+                    'requester': latestRequest.requester,
+                    'orderDescription': latestRequest.orderDescription
+                })
+            } 
+            
+            //If no active requests exist
+            else {
+                res.send("No records found.")
+            }
 
         });
 
