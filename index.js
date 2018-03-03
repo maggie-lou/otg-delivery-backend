@@ -93,6 +93,7 @@ router.route('/requests')
             
             //If no active requests exist
             else {
+                res.status(404);
                 res.send("No records found.")
             }
 
