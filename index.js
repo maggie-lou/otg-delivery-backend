@@ -62,7 +62,7 @@ router.route('/requests')
     .get(function(req, res){
         console.log("GET: requests")
     
-        Request.find().sort('orderTime').exec(function(err, requests) { 
+        Request.find({requestAccepted: false}).sort('orderTime').exec(function(err, requests) { 
             
             if (err){
                 res.send(err);
