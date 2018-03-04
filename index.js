@@ -42,9 +42,6 @@ router.route('/requests')
         request.orderTime = Date.now();
         request.timeFrame = req.body.timeFrame;
 
-        console.log("REQUEST BODY")
-		console.log(req.body);
-
         //save auction
         request.save(function(err){
             //return the error in response if it exists
@@ -87,7 +84,8 @@ router.route('/requests')
 
                 res.json({
                     'requester': latestRequest.requester,
-                    'orderDescription': latestRequest.orderDescription
+                    'orderDescription': latestRequest.orderDescription,
+                    'requestId': latestRequest._id
                 })
             } 
             
@@ -100,6 +98,29 @@ router.route('/requests')
         });
 
     });
+
+//Route that accepts an incoming Id as a parameter 
+//And then marks that request as accepted
+router.route('/requests/accept/:id')
+    .get(function(req, res){
+
+        console.log("GET: accept request")
+
+        let requestId = req.params.id;
+        Request.findById(requestId, function(err, coffeeRequest){
+            coffeeRequest.requestAccepted = true;
+            coffeeRequest.save(function(err){
+                if(err)
+                    console.log(err);
+                else
+                    console.log("Request: " + requestId + " accepted.")
+            }); 
+        })
+
+        res.json({message: 'Request accepted!'});
+
+    }) 
+
 
 app.use('/api', router);
 app.listen(PORT);
