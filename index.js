@@ -25,6 +25,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffee');
 
 var Request = require('./models/request');
+var LoggingEvent = require('./models/LoggingEvent');
 
 //-=-=-=-=-=-=-=-=-=-
 // ROUTE DEFINITIONS 
@@ -122,6 +123,34 @@ router.route('/requests/accept/:id')
 
     }) 
 
+
+// Endpoints that handle logging of Geofence entrances
+router.route('/logging')
+
+    //create an event log
+    .post(function(req, res){
+
+		console.log("POST: logging")
+
+        var loggingEvent = new LoggingEvent();
+        loggingEvent.username = req.body.username;
+        loggingEvent.locationEntered = req.body.locationEntered;
+        loggingEvent.eventTime = Date.now();
+        loggingEvent.eventType = req.body.eventType;
+        loggingEvent.requestId = req.body.requestId;
+
+        //save event
+        loggingEvent.save(function(err){
+            //return the error in response if it exists
+            if (err){
+                res.send(err);
+                console.log(err);
+            }
+
+            res.json({message: 'Event created!'});
+        });
+
+    })
 
 app.use('/api', router);
 app.listen(PORT);
