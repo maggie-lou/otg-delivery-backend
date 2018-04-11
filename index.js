@@ -27,13 +27,14 @@ mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffe
 var Request = require('./models/request');
 var LoggingEvent = require('./models/LoggingEvent');
 
+
 //-=-=-=-=-=-=-=-=-=-
 // ROUTE DEFINITIONS 
 //-=-=-=-=-=-=-=-=-=-
 
 router.route('/requests')
 
-    //create an article
+    //Create a new request
     .post(function(req, res){
 
 		console.log("POST: requests")
@@ -44,7 +45,7 @@ router.route('/requests')
         request.orderTime = Date.now();
         request.timeFrame = req.body.timeFrame;
 
-        //save auction
+        //save request
         request.save(function(err){
             //return the error in response if it exists
             if (err){
@@ -57,7 +58,7 @@ router.route('/requests')
 
     })
 
-    //get route
+    //Get the latest active request
     .get(function(req, res){
         console.log("GET: requests")
     
@@ -101,7 +102,8 @@ router.route('/requests')
 
     });
 
-//Route that accepts an incoming Id as a parameter 
+
+//Route that accepts an incoming ID as a parameter 
 //And then marks that request as accepted
 router.route('/requests/accept/:id')
     .get(function(req, res){
@@ -123,6 +125,21 @@ router.route('/requests/accept/:id')
 
     }) 
 
+//Route that accepts an incoming Id as a parameter 
+//And then marks that request as accepted
+router.route('/requests/:id')
+    .delete(function(req, res){
+
+        console.log("DELETE: delete request")
+
+        let requestId = req.params.id;
+        Request.remove({ _id: requestId}, function(err){
+            console.log("ERROR: could not delete given resource.")
+        });
+
+        res.json({message: 'Request deleted!'});
+
+    }) 
 
 // Endpoints that handle logging of Geofence entrances
 router.route('/logging')
