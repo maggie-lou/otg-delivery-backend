@@ -29,7 +29,7 @@ var LoggingEvent = require('./models/LoggingEvent');
 
 
 //-=-=-=-=-=-=-=-=-=-
-// ROUTE DEFINITIONS 
+// ROUTE DEFINITIONS
 //-=-=-=-=-=-=-=-=-=-
 
 router.route('/requests')
@@ -61,24 +61,24 @@ router.route('/requests')
     //Get the latest active request
     .get(function(req, res){
         console.log("GET: requests")
-    
-        Request.find({requestAccepted: false}).sort('orderTime').exec(function(err, requests) { 
-            
+
+        Request.find({requestAccepted: false}).sort('orderTime').exec(function(err, requests) {
+
             if (err){
                 res.send(err);
                 console.log(err);
             }
 
-            // THIS NEEDS TO BE DONE THROUGH MONGO QUERY NOT IN MEMORY 
-            // GOD, PLEASE CLOSE THINE EYES 
+            // THIS NEEDS TO BE DONE THROUGH MONGO QUERY NOT IN MEMORY
+            // GOD, PLEASE CLOSE THINE EYES
             let validRequests = requests.filter(function(coffeeRequest){
                 //filter out antiquated requests
                 let threshholdMinutes = Number(coffeeRequest.timeFrame);
-                let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion 
+                let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion
                 let msSinceRequest = Date.now() - coffeeRequest.orderTime
 
                 return threshholdMs > msSinceRequest;
-            }); 
+            });
 
             //If an active request exists
             if(validRequests.length > 0){
@@ -90,8 +90,8 @@ router.route('/requests')
                     'orderDescription': latestRequest.orderDescription,
                     'requestId': latestRequest._id
                 })
-            } 
-            
+            }
+
             //If no active requests exist
             else {
                 res.status(404);
@@ -102,8 +102,44 @@ router.route('/requests')
 
     });
 
+// Route that accepts a user's name as a parameter
+// And returns all unexpired requests for that name
+router.route('/requests/name/:name')
+  .get(function(req, res) {
+    console.log("GET: open requests for " + req.params.name);
 
-//Route that accepts an incoming ID as a parameter 
+    Request.find({ requester: req.params.name }, function(err, requests) {
+      if (err) res.status(500).json({ error: err});
+      if (requests) {
+        //filter out antiquated requests
+        let unexpiredRequests = requests.filter(function(coffeeRequest){
+            //filter out antiquated requests
+            let threshholdMinutes = Number(coffeeRequest.timeFrame);
+            let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion
+            let msSinceRequest = Date.now() - coffeeRequest.orderTime
+
+            return threshholdMs > msSinceRequest;
+        });
+        res.status(200).json(unexpiredRequests);
+      } else {
+        res.status(400).json("No open requests for " + req.params.name);
+      }
+    });
+  })
+
+// Updates order and time frame for request with given id
+router.post('/requests/update/:id', function(req, res) {
+  console.log("POST: Update request " + req.body.order);
+  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order, timeFrame: req.body.time}}, function (err, oldRequest) {
+    if(err) {
+      res.status(500).json({ error: err});
+    } else {
+      res.status(200).json("Request with ID " + req.params.id + " updated");
+    }
+  });
+});
+
+//Route that accepts an incoming ID as a parameter
 //And then marks that request as accepted
 router.route('/requests/accept/:id')
     .get(function(req, res){
@@ -118,14 +154,14 @@ router.route('/requests/accept/:id')
                     console.log(err);
                 else
                     console.log("Request: " + requestId + " accepted.")
-            }); 
+            });
         })
 
         res.json({message: 'Request accepted!'});
 
-    }) 
+    })
 
-//Route that accepts an incoming Id as a parameter 
+//Route that accepts an incoming Id as a parameter
 //And then marks that request as accepted
 router.route('/requests/:id')
     .delete(function(req, res){
@@ -139,7 +175,7 @@ router.route('/requests/:id')
 
         res.json({message: 'Request deleted!'});
 
-    }) 
+    })
 
 // Endpoints that handle logging of Geofence entrances
 router.route('/logging')
@@ -169,7 +205,7 @@ router.route('/logging')
 
     })
 
-app.use('/api', router);
+app.use('/', router);
 app.listen(PORT);
 
 console.log('Application listening on PORT: ' + PORT);
