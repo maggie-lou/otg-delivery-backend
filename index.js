@@ -120,20 +120,36 @@ router.route('/requests/name/:name')
 
             return threshholdMs > msSinceRequest;
         });
-        res.status(200).json(unexpiredRequests);
-      } else {
-        res.status(400).json("No open requests for " + req.params.name);
-      }
-    });
+
+        if(unexpiredRequests.length > 0){
+
+            let latestRequest =unexpiredRequests[unexpiredRequests.length - 1];
+
+            res.json({
+                'requester': latestRequest.requester,
+                'orderDescription': latestRequest.orderDescription,
+                'requestId': latestRequest._id
+            })
+        }
+
+        //If no active requests exist
+        else {
+            res.status(404);
+            res.send("No records found.")
+        }
+    }});
   })
 
 // Updates order and time frame for request with given id
 router.post('/requests/update/:id', function(req, res) {
-  console.log("POST: Update request " + req.body.order);
+  console.log("POST: Update request " + req.params.id);
+  console.log(req.body.order);
   Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order, timeFrame: req.body.time}}, function (err, oldRequest) {
     if(err) {
+      console.log("Error updating request.");
       res.status(500).json({ error: err});
     } else {
+      console.log("Request with ID " + req.params.id + " updated");
       res.status(200).json("Request with ID " + req.params.id + " updated");
     }
   });
@@ -161,9 +177,21 @@ router.route('/requests/accept/:id')
 
     })
 
-//Route that accepts an incoming Id as a parameter
-//And then marks that request as accepted
 router.route('/requests/:id')
+    .get(function(req, res) {
+      console.log("GET: get request with id " + req.params.id);
+      Request.findById(req.params.id, function(err, coffeeRequest) {
+        if (err) res.status(500).json({ error: err});
+        if (coffeeRequest) {
+            res.json({
+                'requester': coffeeRequest.requester,
+                'orderDescription': coffeeRequest.orderDescription,
+                'requestId': coffeeRequest._id
+            })
+        }
+      });
+    })
+
     .delete(function(req, res){
 
         console.log("DELETE: delete request")
