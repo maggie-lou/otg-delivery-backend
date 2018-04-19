@@ -121,30 +121,29 @@ router.route('/requests/name/:name')
             return threshholdMs > msSinceRequest;
         });
 
-        if(unexpiredRequests.length > 0){
-
-            let latestRequest =unexpiredRequests[unexpiredRequests.length - 1];
-
-            res.json({
-                'requester': latestRequest.requester,
-                'orderDescription': latestRequest.orderDescription,
-                'requestId': latestRequest._id
-            })
+        var parsedUnexpiredRequests = []
+        var i;
+        for ( i=0; i<unexpiredRequests.length; i++) {
+            var req = {}
+            req.requester = unexpiredRequests[i].requester;
+            req.orderDescription = unexpiredRequests[i].orderDescription;
+            req.requestId = unexpiredRequests[i]._id;
+            parsedUnexpiredRequests.push(req);
         }
-
+        res.send(parsedUnexpiredRequests);
         //If no active requests exist
+      }
         else {
             res.status(404);
             res.send("No records found.")
         }
-    }});
+    });
   })
 
-// Updates order and time frame for request with given id
+// Updates order description for request with given id
 router.post('/requests/update/:id', function(req, res) {
   console.log("POST: Update request " + req.params.id);
-  console.log(req.body.order);
-  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order, timeFrame: req.body.time}}, function (err, oldRequest) {
+  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, function (err, oldRequest) {
     if(err) {
       console.log("Error updating request.");
       res.status(500).json({ error: err});
