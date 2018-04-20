@@ -159,12 +159,32 @@ router.post('/requests/update/:id', function(req, res) {
 router.route('/requests/accept/:id')
     .get(function(req, res){
 
-        console.log("GET: accept request")
+        console.log("GET: Accept request.")
 
         let requestId = req.params.id;
-        Request.findById(requestId, function(err, coffeeRequest){
-            coffeeRequest.requestAccepted = true;
-            coffeeRequest.save(function(err){
+        Request.findById(requestId, function(err, request){
+
+            //check if the request is past the expiration time
+            let threshholdMs = Number(request.timeFrame) * 60 * 1000;
+            let isExpired = Date.now() - request.orderTime > threshholdMs;
+
+            //If it is expired, return a 404 error with that message
+            if(isExpired){
+                res.status(404);
+                res.send("Request expired.")
+                return; 
+            }
+
+            else if(request.requestAccepted){
+                res.status(404);
+                res.send("Request already accepted.");
+                return;
+            }
+
+            //Otherwise, change the status of the request, and accept it
+            request.requestAccepted = true;
+            
+            request.save(function(err){
                 if(err)
                     console.log(err);
                 else
@@ -203,6 +223,7 @@ router.route('/requests/:id')
         res.json({message: 'Request deleted!'});
 
     })
+
 
 // Endpoints that handle logging of Geofence entrances
 router.route('/logging')
