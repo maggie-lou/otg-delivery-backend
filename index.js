@@ -71,11 +71,11 @@ router.route('/requests')
 
             // THIS NEEDS TO BE DONE THROUGH MONGO QUERY NOT IN MEMORY 
             // GOD, PLEASE CLOSE THINE EYES 
-            let validRequests = requests.filter(function(coffeeRequest){
+            let validRequests = requests.filter(function(request){
                 //filter out antiquated requests
-                let threshholdMinutes = Number(coffeeRequest.timeFrame);
+                let threshholdMinutes = Number(request.timeFrame);
                 let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion 
-                let msSinceRequest = Date.now() - coffeeRequest.orderTime
+                let msSinceRequest = Date.now() - request.orderTime
 
                 return threshholdMs > msSinceRequest;
             }); 
@@ -108,26 +108,57 @@ router.route('/requests')
 router.route('/requests/accept/:id')
     .get(function(req, res){
 
-        console.log("GET: accept request")
+        console.log("GET: Accept request.")
 
         let requestId = req.params.id;
-        Request.findById(requestId, function(err, coffeeRequest){
-            coffeeRequest.requestAccepted = true;
-            coffeeRequest.save(function(err){
+        Request.findById(requestId, function(err, request){
+
+            //check if the request is past the expiration time
+            let threshholdMs = Number(request.timeFrame) * 60 * 1000;
+            let isExpired = Date.now() - request.orderTime > threshholdMs;
+
+            //If it is expired, return a 404 error with that message
+            if(isExpired){
+                res.status(404);
+                res.send("Request expired.")
+                return; 
+            }
+
+            else if(request.requestAccepted){
+                res.status(404);
+                res.send("Request already accepted.");
+                return;
+            }
+
+            //Otherwise, change the status of the request, and accept it
+            request.requestAccepted = true;
+            
+            request.save(function(err){
                 if(err)
                     console.log(err);
-                else
-                    console.log("Request: " + requestId + " accepted.")
+                else{
+                    console.log("Request: " + requestId + " accepted.");
+                    res.status(200);
+                    res.send("Request accepted.");
+                }
             }); 
         })
-
-        res.json({message: 'Request accepted!'});
 
     }) 
 
 //Route that accepts an incoming Id as a parameter 
-//And then marks that request as accepted
+//And either deletes or gets data for the given request
 router.route('/requests/:id')
+
+    //Grab a request with the given ID 
+    .get(function(req, res){
+        let requestId = req.params.id;
+        Request.findById(requestId, function(err, request){
+            res.json(request);
+        })
+    })
+
+    //Delete request with a given ID
     .delete(function(req, res){
 
         console.log("DELETE: delete request")
@@ -140,6 +171,7 @@ router.route('/requests/:id')
         res.json({message: 'Request deleted!'});
 
     }) 
+
 
 // Endpoints that handle logging of Geofence entrances
 router.route('/logging')
