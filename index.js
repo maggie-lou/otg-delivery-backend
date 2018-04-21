@@ -2,22 +2,22 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var apn = require('apn');
+// var apn = require('apn');
+//
+//
+// //Configure push notifications
+// var options = {
+//     token: {
+//       key: "path/to/APNsAuthKey_XXXXXXXXXX.p8",
+//       keyId: "key-id",
+//       teamId: "developer-team-id"
+//     },
+//     production: false
+//   };
+//
+//   var apnProvider = new apn.Provider(options);
 
 
-//Configure push notifications
-var options = {
-    token: {
-      key: "path/to/APNsAuthKey_XXXXXXXXXX.p8",
-      keyId: "key-id",
-      teamId: "developer-team-id"
-    },
-    production: false
-  };
-  
-  var apnProvider = new apn.Provider(options);
-
-  
 //so the server can handle POST requests
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -31,11 +31,8 @@ app.use(function(req, res, next) {
 var PORT = process.env.PORT || 8080;
 var router = express.Router();
 
-router.get('/', function(req, res){
-	console.log("API has launched.");
-	res.json({message: "API Base Endpoint."});
-});
 
+// Configure database and data models
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffee');
 
@@ -43,206 +40,13 @@ var Request = require('./models/request');
 var LoggingEvent = require('./models/LoggingEvent');
 
 
-//-=-=-=-=-=-=-=-=-=-
-// ROUTE DEFINITIONS
-//-=-=-=-=-=-=-=-=-=-
+// Set routes
+var RequestController = require('./controllers/RequestController');
+var LoggingController = require('./controllers/LoggingController');
 
-router.route('/requests')
-
-    //Create a new request
-    .post(function(req, res){
-
-		console.log("POST: requests")
-
-        var request = new Request();
-        request.requester = req.body.requester;
-        request.orderDescription = req.body.orderDescription;
-        request.orderTime = Date.now();
-        request.endTime = req.body.endTime;
-
-        //save request
-        request.save(function(err){
-            //return the error in response if it exists
-            if (err){
-                res.send(err);
-                console.log(err);
-            }
-
-            res.json({message: 'Request created!'});
-        });
-
-    })
-
-    //Get the latest active request
-    .get(function(req, res){
-        console.log("GET: requests")
-
-        Request.find({requestAccepted: false, 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
-
-            if (err){
-                res.send(err);
-                console.log(err);
-            }
-
-            res.send(requests[0]);
-
-        });
-
-    });
-
-// Route that accepts a user's name as a parameter
-// And returns all unexpired requests for that name
-router.route('/requests/name/:name')
-  .get(function(req, res) {
-    console.log("GET: open requests for " + req.params.name);
-
-    Request.find({ requester: req.params.name, 'endTime': {$gte: Date.now()}}, function(err, requests) {
-      if (err) res.status(500).json({ error: err});
-      if (requests) {
-
-        /*
-        var parsedUnexpiredRequests = []
-        var i;
-        for ( i=0; i<unexpiredRequests.length; i++) {
-            var req = {}
-            req.requester = unexpiredRequests[i].requester;
-            req.orderDescription = unexpiredRequests[i].orderDescription;
-            req.requestId = unexpiredRequests[i]._id;
-            parsedUnexpiredRequests.push(req);
-        }
-        */
-        res.send(requests);
-        //If no active requests exist
-      }
-        else {
-            res.status(404);
-            res.send("No records found.")
-        }
-    });
-  })
-
-// Updates order description for request with given id
-router.post('/requests/update/:id', function(req, res) {
-  console.log("POST: Update request " + req.params.id);
-  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, function (err, oldRequest) {
-    if(err) {
-      console.log("Error updating request.");
-      res.status(500).json({ error: err});
-    } else {
-      console.log("Request with ID " + req.params.id + " updated");
-      res.status(200).json("Request with ID " + req.params.id + " updated");
-    }
-  });
-});
-
-//Route that accepts an incoming ID as a parameter
-//And then marks that request as accepted
-router.route('/requests/accept/:id')
-    .get(function(req, res){
-
-        console.log("GET: Accept request.")
-
-        let requestId = req.params.id;
-        Request.findById(requestId, function(err, request){
-
-            if(err){
-                console.log(err);
-                res.status(500);
-                res.send();
-                return;
-            }
-
-            //check if the request is past the expiration time
-            let isExpired = Date.now() > request.endTime;
-            console.log("PRINTING IS EXPIRED")
-            console.log(isExpired);
-
-            //If it is expired, return a 404 error with that message
-            if(isExpired){
-                res.status(404);
-                res.send("Request expired.")
-                return; 
-            }
-
-            else if(request.requestAccepted){
-                res.status(404);
-                res.send("Request already accepted.");
-                return;
-            }
-
-            //Otherwise, change the status of the request, and accept it
-            request.requestAccepted = true;
-            
-            request.save(function(err){
-                if(err)
-                    console.log(err);
-                else{
-                    res.send("Request: " + requestId + " accepted.")
-                    console.log("Request: " + requestId + " accepted.")
-                }
-            });
-        })
-
-    })
-
-router.route('/requests/:id')
-    .get(function(req, res) {
-      console.log("GET: get request with id " + req.params.id);
-      Request.findById(req.params.id, function(err, coffeeRequest) {
-        if (err) res.status(500).json({ error: err});
-        if (coffeeRequest) {
-            res.json({
-                'requester': coffeeRequest.requester,
-                'orderDescription': coffeeRequest.orderDescription,
-                'requestId': coffeeRequest._id
-            })
-        }
-      });
-    })
-
-    .delete(function(req, res){
-
-        console.log("DELETE: delete request")
-
-        let requestId = req.params.id;
-        Request.remove({ _id: requestId}, function(err){
-            console.log("ERROR: could not delete given resource.")
-        });
-
-        res.json({message: 'Request deleted!'});
-
-    })
+app.use('/requests', RequestController);
+app.use('/logging', LoggingController);
 
 
-// Endpoints that handle logging of Geofence entrances
-router.route('/logging')
-
-    //create an event log
-    .post(function(req, res){
-
-		console.log("POST: logging")
-
-        var loggingEvent = new LoggingEvent();
-        loggingEvent.username = req.body.username;
-        loggingEvent.locationEntered = req.body.locationEntered;
-        loggingEvent.eventTime = Date.now();
-        loggingEvent.eventType = req.body.eventType;
-        loggingEvent.requestId = req.body.requestId;
-
-        //save event
-        loggingEvent.save(function(err){
-            //return the error in response if it exists
-            if (err){
-                res.send(err);
-                console.log(err);
-            }
-
-            res.json({message: 'Event created!'});
-        });
-
-    })
-
-app.use('/', router);
 app.listen(PORT);
-
 console.log('Application listening on PORT: ' + PORT);
