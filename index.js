@@ -2,7 +2,22 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var apn = require('apn');
 
+
+//Configure push notifications
+var options = {
+    token: {
+      key: "path/to/APNsAuthKey_XXXXXXXXXX.p8",
+      keyId: "key-id",
+      teamId: "developer-team-id"
+    },
+    production: false
+  };
+  
+  var apnProvider = new apn.Provider(options);
+
+  
 //so the server can handle POST requests
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -43,7 +58,7 @@ router.route('/requests')
         request.requester = req.body.requester;
         request.orderDescription = req.body.orderDescription;
         request.orderTime = Date.now();
-        request.timeFrame = req.body.timeFrame;
+        request.endTime = req.body.endTime;
 
         //save request
         request.save(function(err){
@@ -62,41 +77,14 @@ router.route('/requests')
     .get(function(req, res){
         console.log("GET: requests")
 
-        Request.find({requestAccepted: false}).sort('orderTime').exec(function(err, requests) {
+        Request.find({requestAccepted: false, 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
 
             if (err){
                 res.send(err);
                 console.log(err);
             }
 
-            // THIS NEEDS TO BE DONE THROUGH MONGO QUERY NOT IN MEMORY
-            // GOD, PLEASE CLOSE THINE EYES
-            let validRequests = requests.filter(function(coffeeRequest){
-                //filter out antiquated requests
-                let threshholdMinutes = Number(coffeeRequest.timeFrame);
-                let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion
-                let msSinceRequest = Date.now() - coffeeRequest.orderTime
-
-                return threshholdMs > msSinceRequest;
-            });
-
-            //If an active request exists
-            if(validRequests.length > 0){
-
-                let latestRequest = validRequests[validRequests.length - 1];
-
-                res.json({
-                    'requester': latestRequest.requester,
-                    'orderDescription': latestRequest.orderDescription,
-                    'requestId': latestRequest._id
-                })
-            }
-
-            //If no active requests exist
-            else {
-                res.status(404);
-                res.send("No records found.")
-            }
+            res.send(requests[0]);
 
         });
 
@@ -108,19 +96,11 @@ router.route('/requests/name/:name')
   .get(function(req, res) {
     console.log("GET: open requests for " + req.params.name);
 
-    Request.find({ requester: req.params.name }, function(err, requests) {
+    Request.find({ requester: req.params.name, 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) res.status(500).json({ error: err});
       if (requests) {
-        //filter out antiquated requests
-        let unexpiredRequests = requests.filter(function(coffeeRequest){
-            //filter out antiquated requests
-            let threshholdMinutes = Number(coffeeRequest.timeFrame);
-            let threshholdMs = threshholdMinutes * 60 * 1000; // ms conversion
-            let msSinceRequest = Date.now() - coffeeRequest.orderTime
 
-            return threshholdMs > msSinceRequest;
-        });
-
+        /*
         var parsedUnexpiredRequests = []
         var i;
         for ( i=0; i<unexpiredRequests.length; i++) {
@@ -130,7 +110,8 @@ router.route('/requests/name/:name')
             req.requestId = unexpiredRequests[i]._id;
             parsedUnexpiredRequests.push(req);
         }
-        res.send(parsedUnexpiredRequests);
+        */
+        res.send(requests);
         //If no active requests exist
       }
         else {
@@ -164,9 +145,17 @@ router.route('/requests/accept/:id')
         let requestId = req.params.id;
         Request.findById(requestId, function(err, request){
 
+            if(err){
+                console.log(err);
+                res.status(500);
+                res.send();
+                return;
+            }
+
             //check if the request is past the expiration time
-            let threshholdMs = Number(request.timeFrame) * 60 * 1000;
-            let isExpired = Date.now() - request.orderTime > threshholdMs;
+            let isExpired = Date.now() > request.endTime;
+            console.log("PRINTING IS EXPIRED")
+            console.log(isExpired);
 
             //If it is expired, return a 404 error with that message
             if(isExpired){
@@ -187,12 +176,12 @@ router.route('/requests/accept/:id')
             request.save(function(err){
                 if(err)
                     console.log(err);
-                else
+                else{
+                    res.send("Request: " + requestId + " accepted.")
                     console.log("Request: " + requestId + " accepted.")
+                }
             });
         })
-
-        res.json({message: 'Request accepted!'});
 
     })
 

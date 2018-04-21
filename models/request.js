@@ -5,7 +5,7 @@ var RequestSchema = new Schema({
 	requester: String, 
 	orderDescription: String,
 	orderTime: Date,
-	timeFrame: Number,
+	endTime: Date,
 	requestAccepted: {
 		type: Boolean,
 		default: false
