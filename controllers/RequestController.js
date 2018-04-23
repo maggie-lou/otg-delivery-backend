@@ -14,7 +14,7 @@ router.route('/')
         request.orderDescription = req.body.orderDescription;
         request.orderTime = Date.now();
         request.endTime = req.body.endTime;
-        console.log('HI' + request);
+        request.status = req.body.status;
         //save request
         request.save(function(err){
             //return the error in response if it exists
@@ -31,7 +31,7 @@ router.route('/')
     .get(function(req, res){
         console.log("GET: requests")
 
-        Request.find({requestAccepted: false, 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
+        Request.find({status: 'Open', 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
             if (err){
                 console.log("Error getting latest active request");
                 res.send(err);
@@ -122,14 +122,14 @@ router.route('/accept/:id')
             if(isExpired){
                 res.status(404);
                 res.send("Request expired.")
-            } else if(request.requestAccepted){
+            } else if(request.status){
                 res.status(404);
                 res.send("Request already accepted.");
                 return;
             }
 
             //Otherwise, change the status of the request, and accept it
-            request.requestAccepted = true;
+            request.status = 'Accepted';
 
             request.save(function(err){
                 if(err)
