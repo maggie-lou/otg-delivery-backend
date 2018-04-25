@@ -49,7 +49,7 @@ router.route('/name/:name')
   .get(function(req, res) {
     console.log("GET: open requests for " + req.params.name);
 
-    Request.find({ requester: req.params.name, 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    Request.find({ requester: req.params.name, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
         console.log("Error getting requests for " + req.params.name);
         res.send(err);
@@ -102,45 +102,64 @@ router.post('/update/:id', function(req, res) {
 
 
 
-//Route that accepts an incoming ID as a parameter
-//And then marks that request as accepted
-router.route('/accept/:id')
-    .get(function(req, res){
-        console.log("GET: Accept request " + req.params.id);
+// //Route that accepts an incoming ID as a parameter
+// //And then marks that request as accepted
+// router.route('/accept/:id')
+//     .get(function(req, res){
+//         console.log("GET: Accept request " + req.params.id);
+//
+//         let requestId = req.params.id;
+//         Request.findById(requestId, function(err, request){
+//             if(err){
+//                 console.log("Error accepting request " + req.params.id);
+//                 res.send(err);
+//             }
+//
+//             //check if the request is past the expiration time
+//             let isExpired = Date.now() > request.endTime;
+//
+//             //If it is expired, return a 404 error with that message
+//             if(isExpired){
+//                 res.status(404);
+//                 res.send("Request expired.")
+//             } else if(request.status){
+//                 res.status(404);
+//                 res.send("Request already accepted.");
+//                 return;
+//             }
+//
+//             //Otherwise, change the status of the request, and accept it
+//             request.status = 'Accepted';
+//
+//             request.save(function(err){
+//                 if(err)
+//                     console.log(err);
+//                 else{
+//                     res.send("Request: " + requestId + " accepted.")
+//                     console.log("Request: " + requestId + " accepted.")
+//                 }
+//             });
+//         })
+//     })
 
-        let requestId = req.params.id;
-        Request.findById(requestId, function(err, request){
-            if(err){
-                console.log("Error accepting request " + req.params.id);
-                res.send(err);
-            }
 
-            //check if the request is past the expiration time
-            let isExpired = Date.now() > request.endTime;
+// Route that changes the status of a given request
+router.route('/status/:id')
+    .post(function(req, res) {
+        console.log("POST: Change request status for " + req.params.id);
 
-            //If it is expired, return a 404 error with that message
-            if(isExpired){
-                res.status(404);
-                res.send("Request expired.")
-            } else if(request.status){
-                res.status(404);
-                res.send("Request already accepted.");
-                return;
-            }
+        Request.findOneAndUpdate( { _id: req.params.id}, {$set: { status: req.body.status}}, {"new": true}, function (err, newRequest) {
+          if(err) {
+            console.log("Error updating request.");
+            res.send(err);
+          } else {
+            console.log("Request status for ID " + req.params.id + " updated");
+            res.send("Request status for ID " + req.params.id + " updated");
 
-            //Otherwise, change the status of the request, and accept it
-            request.status = 'Accepted';
+            // Right now, not checking if you are trying to accept an expired request
+          }
+        });
 
-            request.save(function(err){
-                if(err)
-                    console.log(err);
-                else{
-                    res.send("Request: " + requestId + " accepted.")
-                    console.log("Request: " + requestId + " accepted.")
-                }
-            });
-        })
     })
-
 
 module.exports = router;
