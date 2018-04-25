@@ -36,16 +36,14 @@ var router = express.Router();
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffee');
 
-var Request = require('./models/request');
-var LoggingEvent = require('./models/LoggingEvent');
-
-
 // Set routes
 var RequestController = require('./controllers/RequestController');
 var LoggingController = require('./controllers/LoggingController');
+var FeedbackController = require('./controllers/FeedbackController')
 
 app.use('/requests', RequestController);
 app.use('/logging', LoggingController);
+app.use('/feedback', FeedbackController);
 
 
 app.listen(PORT);
