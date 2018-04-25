@@ -6,7 +6,11 @@ var RequestSchema = new Schema({
 	orderDescription: String,
 	orderTime: Date,
 	endTime: Date,
-	status: String
+	status: String,
+  helper: {
+    type: String,
+    default: ''
+  }
 });
 
 module.exports = mongoose.model('Request', RequestSchema);

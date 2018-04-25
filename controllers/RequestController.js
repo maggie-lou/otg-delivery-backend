@@ -162,4 +162,57 @@ router.route('/status/:id')
 
     })
 
+
+router.route('/accept/name/:name')
+  // Get all requests for which the input name accepted the task
+  .get(function(req, res) {
+    console.log("GET: accepted tasks for " + req.params.name);
+
+    Request.find({ helper: req.params.name, status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    // Request.find({ helper: req.params.name}, function(err, requests) {
+      if (err) {
+        console.log("Error getting accepted tasks for " + req.params.name);
+        res.send(err);
+      }
+      res.send(requests);
+      });
+  })
+
+  // Allow helper to accept a task
+    .post(function(req, res) {
+        Request.findById(req.body.id, function(err, request){
+            if(err){
+                console.log("Error accepting request " + req.body.id);
+                res.send(err);
+            }
+
+            //check if the request is past the expiration time
+            let isExpired = Date.now() > request.endTime;
+
+            //If it is expired, return a 404 error with that message
+            if(isExpired){
+                res.status(404);
+                res.send("Request expired - cannot accept.")
+            } else if(request.status == 'Accepted'){
+                res.status(404);
+                res.send("Request already accepted.");
+                return;
+            }
+
+            //Otherwise, change the status of the request, and accept it
+            request.status = 'Accepted';
+            request.helper = req.params.name;
+
+            request.save(function(err){
+                if(err)
+                    console.log(err);
+                else{
+                    res.send("Accepted request with ID " + req.body.id + "by " + req.params.name);
+                    console.log("Accepted request with ID " + req.body.id + "by " + req.params.name);
+                }
+            });
+        });
+
+    })
+
 module.exports = router;
