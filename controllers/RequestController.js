@@ -1,5 +1,5 @@
 var express = require('express');
-var Request = require('../models/request');
+var Request = require('../models/Request');
 const router = express.Router();
 
 
@@ -88,7 +88,7 @@ router.route('/id/:id')
 // Updates order description for request with given id
 router.post('/update/:id', function(req, res) {
   console.log("POST: Update request " + req.params.id);
-  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, function (err, oldRequest) {
+  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, {"new": true}, function (err, oldRequest) {
     if(err) {
       console.log("Error updating request.");
       res.send(err);
