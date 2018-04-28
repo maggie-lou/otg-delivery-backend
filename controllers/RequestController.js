@@ -2,6 +2,15 @@ var express = require('express');
 var Request = require('../models/Request');
 const router = express.Router();
 
+// FOR TESTING
+var PushController = require('./push');
+
+router.route('/test/:message')
+  .post(function(req, res) {
+   // accept push token in body
+    var push_tokens = [req.body.pushtoken];
+    PushController.sendPushWithMessage(push_tokens, req.params.message, res);
+  })
 
 router.route('/')
     //Create a new request
