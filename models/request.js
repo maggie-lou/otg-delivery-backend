@@ -10,7 +10,9 @@ var RequestSchema = new Schema({
   helper: {
     type: String,
     default: ''
-  }
+  },
+  deliveryLocation: String,
+  deliveryLocationDetails: String,
 });
 
 module.exports = mongoose.model('Request', RequestSchema);

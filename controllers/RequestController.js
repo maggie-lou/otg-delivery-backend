@@ -2,7 +2,7 @@ var express = require('express');
 var Request = require('../models/Request');
 const router = express.Router();
 
-// FOR TESTING
+// FOR TESTING Push notifications ////////////////////////////////////
 var PushController = require('./push');
 
 router.route('/test/:message')
@@ -11,6 +11,14 @@ router.route('/test/:message')
     var push_tokens = [req.body.pushtoken];
     PushController.sendPushWithMessage(push_tokens, req.params.message, res);
   })
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 router.route('/')
     //Create a new request
@@ -24,6 +32,9 @@ router.route('/')
         request.orderTime = Date.now();
         request.endTime = req.body.endTime;
         request.status = req.body.status;
+        request.deliveryLocation = req.body.deliveryLocation;
+        request.deliveryLocationDetails = req.body.deliveryLocationDetails;
+
         //save request
         request.save(function(err){
             //return the error in response if it exists
@@ -40,7 +51,7 @@ router.route('/')
     .get(function(req, res){
         console.log("GET: requests")
 
-        Request.find({status: 'Open', 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
+        Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
             if (err){
                 console.log("Error getting latest active request");
                 res.send(err);
@@ -56,7 +67,7 @@ router.route('/name/:name')
   // Route that accepts a user's name as a parameter
   // And returns all unexpired requests for that name
   .get(function(req, res) {
-    console.log("GET: open requests for " + req.params.name);
+    console.log("GET: pending requests for " + req.params.name);
 
     Request.find({ requester: req.params.name, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
@@ -107,49 +118,6 @@ router.post('/update/:id', function(req, res) {
     }
   });
 });
-
-
-
-
-// //Route that accepts an incoming ID as a parameter
-// //And then marks that request as accepted
-// router.route('/accept/:id')
-//     .get(function(req, res){
-//         console.log("GET: Accept request " + req.params.id);
-//
-//         let requestId = req.params.id;
-//         Request.findById(requestId, function(err, request){
-//             if(err){
-//                 console.log("Error accepting request " + req.params.id);
-//                 res.send(err);
-//             }
-//
-//             //check if the request is past the expiration time
-//             let isExpired = Date.now() > request.endTime;
-//
-//             //If it is expired, return a 404 error with that message
-//             if(isExpired){
-//                 res.status(404);
-//                 res.send("Request expired.")
-//             } else if(request.status){
-//                 res.status(404);
-//                 res.send("Request already accepted.");
-//                 return;
-//             }
-//
-//             //Otherwise, change the status of the request, and accept it
-//             request.status = 'Accepted';
-//
-//             request.save(function(err){
-//                 if(err)
-//                     console.log(err);
-//                 else{
-//                     res.send("Request: " + requestId + " accepted.")
-//                     console.log("Request: " + requestId + " accepted.")
-//                 }
-//             });
-//         })
-//     })
 
 
 // Route that changes the status of a given request
