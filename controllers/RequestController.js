@@ -5,9 +5,11 @@ const router = express.Router();
 // FOR TESTING Push notifications ////////////////////////////////////
 var PushController = require('./push');
 
-router.route('/test/:message')
+router.route('/sendpush/:message')
   .post(function(req, res) {
+    console.log("here");
    // accept push token in body
+   console.log(req.body.pushtoken);
     var push_tokens = [req.body.pushtoken];
     PushController.sendPushWithMessage(push_tokens, req.params.message, res);
   })

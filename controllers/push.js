@@ -14,14 +14,14 @@ if (nodeEnv === '') { // Force development certificate
 
   options = {
     token: {
-      key: __dirname + '/push-certificates/apns.p8', // Path to the key p8 file
-      keyId: '8ZQHB4KZ62', // The Key ID of the p8 file
+      key: './push_certificates/otgDev.p8', // Path to the key p8 file
+      keyId: '28ZNR8T66U', // The Key ID of the p8 file
       teamId: 'W4E2C6X642', // The Team ID of your Apple Developer Account
     },
     production: false //working with development certificate
   };
 
-  topic = 'edu.northwestern.delta.les-debug';
+  topic = 'edu.northwestern.delta.otgDev';
 } else if (nodeEnv === 'development') { //Erros
   // Enterprise push
   console.log('Using ENTERPRISE push.');
@@ -32,7 +32,7 @@ if (nodeEnv === '') { // Force development certificate
     production: true //working with production certificate
   };
 
-  topic = 'edu.northwestern.delta.les';
+  topic = 'edu.northwestern.otgDev';
 }
 
 options.errorCallback = (err) => {
@@ -63,6 +63,9 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
 
   apnConnection.send(note, deviceTokens).then((result) => {
     if (response !== undefined) {
+      console.log(deviceTokens);
+      console.log(note);
+      console.log("Success");
       response.success(result);
     }
   }).catch(error => {
