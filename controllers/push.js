@@ -14,7 +14,7 @@ if (nodeEnv === '') { // Force development certificate
 
   options = {
     token: {
-      key: './push_certificates/otgDev.p8', // Path to the key p8 file
+      key: __dirname + '/push_certificates/otgDev.p8', // Path to the key p8 file
       keyId: '28ZNR8T66U', // The Key ID of the p8 file
       teamId: 'W4E2C6X642', // The Team ID of your Apple Developer Account
     },
