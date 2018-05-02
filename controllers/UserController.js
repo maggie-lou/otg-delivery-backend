@@ -36,6 +36,7 @@ router.route('/')
                 return;
             }
 
+            console.log(userDocument);
             res.status(200);
             res.send(userDocument);
 
