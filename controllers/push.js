@@ -5,10 +5,10 @@ const apn = require('apn');
  */
 // Looking for development or production environment
 const nodeEnv = process.env.NODE_ENV || '';
+
 let options = {},
   topic = '';
 
-if (nodeEnv === '') { // Force development certificate
   // Development Push
   console.log('Using DEVELOPMENT push.');
 
@@ -22,20 +22,7 @@ if (nodeEnv === '') { // Force development certificate
   };
 
   topic = 'edu.northwestern.delta.otgDev';
-} else if (nodeEnv === 'development') { //Erros
-  // Development Push
-  console.log('Using <PRODUCTION?> push.');
-
-  options = {
-    token: {
-      key: __dirname + '/push_certificates/otgDev.p8', // Path to the key p8 file
-      keyId: '28ZNR8T66U', // The Key ID of the p8 file
-      teamId: 'W4E2C6X642', // The Team ID of your Apple Developer Account
-    },
-    production: false //working with development certificate
-  };
-  topic = 'edu.northwestern.otgDev';
-}
+ 
 
 options.errorCallback = (err) => {
   console.log('APN Error:', err);
