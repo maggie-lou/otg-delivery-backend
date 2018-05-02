@@ -23,15 +23,17 @@ if (nodeEnv === '') { // Force development certificate
 
   topic = 'edu.northwestern.delta.otgDev';
 } else if (nodeEnv === 'development') { //Erros
-  // Enterprise push
-  console.log('Using ENTERPRISE push.');
+  // Development Push
+  console.log('Using <PRODUCTION?> push.');
 
   options = {
-    cert: __dirname + '/push-certificates/cert.pem',
-    key: __dirname + '/push-certificates/key.pem',
-    production: true //working with production certificate
+    token: {
+      key: __dirname + '/push_certificates/otgDev.p8', // Path to the key p8 file
+      keyId: '28ZNR8T66U', // The Key ID of the p8 file
+      teamId: 'W4E2C6X642', // The Team ID of your Apple Developer Account
+    },
+    production: false //working with development certificate
   };
-
   topic = 'edu.northwestern.otgDev';
 }
 
