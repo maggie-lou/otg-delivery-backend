@@ -29,7 +29,7 @@ router.route('/')
         user.deviceId = deviceId;
         user.username = username;
 
-        user.save(function(err){
+        user.save(function(err, userDocument){
 
             if(err){
                 res.send(err);
@@ -37,7 +37,7 @@ router.route('/')
             }
 
             res.status(200);
-            res.send("User account created.");
+            res.send(userDocument);
 
         })
 
