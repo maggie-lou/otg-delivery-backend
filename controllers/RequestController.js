@@ -13,13 +13,7 @@ router.route('/sendpush/:message')
     var push_tokens = [req.body.pushtoken];
     PushController.sendPushWithMessage(push_tokens, req.params.message, res);
   })
-
-
 ////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 
 router.route('/')

@@ -23,6 +23,7 @@ mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffe
 
 // Set routes
 var RequestController = require('./controllers/RequestController');
+var UserController = require('./controllers/UserController');
 var LoggingController = require('./controllers/LoggingController');
 var FeedbackController = require('./controllers/FeedbackController');
 
@@ -30,6 +31,7 @@ var FeedbackController = require('./controllers/FeedbackController');
 var PushController = require('./controllers/push');
 
 app.use('/requests', RequestController);
+app.use('/users', UserController);
 app.use('/logging', LoggingController);
 app.use('/feedback', FeedbackController);
 
