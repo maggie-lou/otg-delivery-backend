@@ -61,6 +61,7 @@ router.route('/userid/:userId')
         console.log("Error getting requests for " + req.params.userId);
         res.send(err);
       }
+      console.log(requests);
       res.send(requests);
       });
     })
