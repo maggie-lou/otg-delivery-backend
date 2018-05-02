@@ -36,7 +36,7 @@ router.route('/')
 
     //GET: get oldest request that hasn't expired
     .get(function(req, res){
-        console.log("GET: requests")
+        console.log("GET: /requests")
 
         Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
             if (err){
@@ -186,8 +186,7 @@ router.route('/accept/:userId')
                             //Notify user that his order was accepted
                             let pushNotificationMessage = `${ helperDoc.username } accepted order request for ${ request.orderDescription }!`;
                             
-                            console.log(pushNotificationMessage);
-
+                            console.log(`SENDING PUSH NOTIFICATION FOR USER: ${ pushNotificationMessage }`);
                             let deviceToken = [request.requester.deviceId];
                             PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
 
