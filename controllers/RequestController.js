@@ -2,7 +2,7 @@
 var PushController = require('./push');
 
 var express = require('express');
-var Request = require('../models/Request');
+var Request = require('../models/request');
 var User = require('../models/User'); 
 const router = express.Router();
 
