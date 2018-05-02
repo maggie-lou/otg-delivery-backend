@@ -179,11 +179,19 @@ router.route('/accept/:userId')
 
                     else{
 
+                        console.log("USER ID PARAMSSS: " + req.params.userId);
                         User.findById(req.params.userId, function(err, helperDoc){
+
+                            if(err){
+                                console.log(err);
+                                res.send(err);
+                                return;
+                            }
 
                             //Grab our requester, and their device ID
                             console.log("Requester: " + request.requester.deviceId);
-                            console.log("Helper: " + helperDoc);
+                            console.log("Helper: -=-=-=-");
+                            console.log(helperDoc);
                             //Notify user that his order was accepted
                             let pushNotificationMessage = `${ helperDoc.username } accepted order request for ${ request.orderDescription }!`;
                             
