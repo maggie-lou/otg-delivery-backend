@@ -183,7 +183,7 @@ router.route('/accept/:userId')
 
                             //Grab our requester, and their device ID
                             console.log("Requester: " + request.requester.deviceId);
-
+                            console.log("Helper: " + helperDoc);
                             //Notify user that his order was accepted
                             let pushNotificationMessage = `${ helperDoc.username } accepted order request for ${ request.orderDescription }!`;
                             
