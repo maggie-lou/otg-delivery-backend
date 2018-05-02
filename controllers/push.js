@@ -57,7 +57,7 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
   note.sound = 'ping.aiff';
   note.alert = message;
   note.payload = {
-    'messageFrom': 'LES'
+    'messageFrom': 'OTG-server'
   };
   note.topic = topic;
 
