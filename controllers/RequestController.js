@@ -58,7 +58,7 @@ router.route('/userid/:userId')
   .get(function(req, res) {
     console.log("GET: pending requests for " + req.params.userId);
 
-    Request.find({ requester: req.params.userId, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    Request.find({ helper: req.params.userId, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
         console.log("Error getting requests for " + req.params.userId);
         res.send(err);
