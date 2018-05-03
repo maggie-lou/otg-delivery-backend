@@ -133,11 +133,12 @@ router.route('/accept/:userId')
   .get(function(req, res) {
     console.log("GET: accepted tasks for " + req.params.userId);
 
-    Request.find({ helper: req.params.userId, status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    Request.find({ status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
         console.log("Error getting accepted tasks for " + req.params.userId);
         res.send(err);
       }
+      console.log(requests);
       res.send(requests);
     });
   })
