@@ -1,8 +1,6 @@
 //Push notifications
 var PushController = require('./push');
-
 var express = require('express');
-var ObjectId = require('mongoose').Types.ObjectId
 
 var Request = require('../models/request');
 var User = require('../models/User'); 
@@ -135,7 +133,7 @@ router.route('/accept/:userId')
   .get(function(req, res) {
     console.log("GET: accepted tasks for " + req.params.userId);
 
-    Request.find({ helper: new ObjectId(req.params.userId), status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    Request.find({ helper: req.params.userId, status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
         console.log("Error getting accepted tasks for " + req.params.userId);
         res.send(err);
