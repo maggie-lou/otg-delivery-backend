@@ -2,6 +2,8 @@
 var PushController = require('./push');
 
 var express = require('express');
+var mongoose = require('mongoose');
+
 var Request = require('../models/request');
 var User = require('../models/User'); 
 const router = express.Router();
@@ -133,7 +135,7 @@ router.route('/accept/:userId')
   .get(function(req, res) {
     console.log("GET: accepted tasks for " + req.params.userId);
 
-    Request.find({ status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
+    Request.find({ helper: mongoose.mongo.ObjectId(req.params.userId), status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
       if (err) {
         console.log("Error getting accepted tasks for " + req.params.userId);
         res.send(err);
