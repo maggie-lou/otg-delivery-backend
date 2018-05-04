@@ -28,6 +28,7 @@ router.route('/')
             if (err){
                 console.log("Error creating new request");
                 res.send(err);
+                return;
             }
             res.json({message: 'Request created!'});
         });
@@ -42,6 +43,7 @@ router.route('/')
             if (err){
                 console.log("Error getting latest active request");
                 res.send(err);
+                return;
             }
             res.send(requests[0]);
         });
@@ -60,6 +62,7 @@ router.route('/userid/:userId')
       if (err) {
         console.log("Error getting requests for " + req.params.userId);
         res.send(err);
+        return;
       }
       console.log(requests);
       res.send(requests);
