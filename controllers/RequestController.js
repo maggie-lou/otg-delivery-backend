@@ -3,7 +3,7 @@ var PushController = require('./push');
 var express = require('express');
 
 var Request = require('../models/request');
-var User = require('../models/User'); 
+var User = require('../models/User');
 const router = express.Router();
 
 
@@ -64,7 +64,6 @@ router.route('/userid/:userId')
         res.send(err);
         return;
       }
-      console.log(requests);
       res.send(requests);
       });
     })
@@ -141,7 +140,6 @@ router.route('/accept/:userId')
         console.log("Error getting accepted tasks for " + req.params.userId);
         res.send(err);
       }
-      console.log(requests);
       res.send(requests);
     });
   })
@@ -198,7 +196,7 @@ router.route('/accept/:userId')
                             console.log(helperDoc);
                             //Notify user that his order was accepted
                             let pushNotificationMessage = `${ helperDoc.username } accepted order request for ${ request.orderDescription }!`;
-                            
+
                             console.log(`SENDING PUSH NOTIFICATION FOR USER: ${ pushNotificationMessage }`);
                             let deviceToken = [request.requester.deviceId];
                             PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
@@ -212,6 +210,28 @@ router.route('/accept/:userId')
                     }
                 });
             });
+    })
+
+
+
+router.route('/helper/cancel/:requestId')
+    // Let a helper cancel his/her ability to complete a task
+    .delete(function(req, res) {
+      // Remove a helper's name from the database entry
+        console.log("DELETE: Remove helper from request " + req.params.requestId);
+
+        Request.findOneAndUpdate( { _id: req.params.requestId}, {$set: { helper: null, status: "Pending"}}, {"new": true}, function (err, newRequest) {
+          if(err) {
+            console.log("Error updating request.");
+            res.send(err);
+            return;
+          } else {
+            console.log("Removed helper for request ID " + req.params.requestId);
+            res.send("Removed helper for request ID " + req.params.requestId);
+
+            // Right now, not checking if you are trying to accept an expired request
+          }
+        });
     })
 
 module.exports = router;
