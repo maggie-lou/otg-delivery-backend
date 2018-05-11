@@ -22,7 +22,7 @@ let options = {},
   };
 
   topic = 'edu.northwestern.delta.otgDev';
- 
+
 
 options.errorCallback = (err) => {
   console.log('APN Error:', err);
@@ -38,6 +38,8 @@ options.errorCallback = (err) => {
 // Texts to phone
 // Send to one device, array with one token
 exports.sendPushWithMessage = (deviceTokens, message, response) => {
+  console.log("In send push with message");
+  console.log(deviceTokens[0]);
   const apnConnection = new apn.Provider(options);
 
   const note = new apn.Notification();

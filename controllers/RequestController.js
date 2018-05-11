@@ -95,7 +95,7 @@ router.route('/id/:id')
     })
 
 
-// Updates order description for request with given id
+// Updates orderdescription for request with given id
 router.post('/update/:id', function(req, res) {
   console.log("POST: Update request " + req.params.id);
   Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, {"new": true}, function (err, oldRequest) {
@@ -220,18 +220,42 @@ router.route('/helper/cancel/:requestId')
       // Remove a helper's name from the database entry
         console.log("DELETE: Remove helper from request " + req.params.requestId);
 
-        Request.findOneAndUpdate( { _id: req.params.requestId}, {$set: { helper: null, status: "Pending"}}, {"new": true}, function (err, newRequest) {
-          if(err) {
-            console.log("Error updating request.");
-            res.send(err);
-            return;
-          } else {
-            console.log("Removed helper for request ID " + req.params.requestId);
-            res.send("Removed helper for request ID " + req.params.requestId);
+        Request.findOneAndUpdate( { _id: req.params.requestId}, {$set: { helper: null, status: "Pending"}})
+            .populate('requester')
+            .exec(function(err, oldRequest) {
+                  if(err) {
+                    console.log("Error updating request.");
+                    res.send(err);
+                    return;
+                  } else {
+                    // Get former helper name
 
-            // Right now, not checking if you are trying to accept an expired request
-          }
-        });
+                    var helperId = oldRequest.helper;
+                    User.findById(helperId, function(err, helperDoc){
+                        if(err){
+                            console.log("Error getting former helper for a canceled task.");
+                            res.send(err);
+                            return;
+                        }
+
+                        // Notify requester that their delivery has been canceled
+                        let pushNotificationMessage = `Unfortunately, ${ helperDoc.username } can no longer deliver your request for a ${ oldRequest.orderDescription }. We apologize for the inconvenience!`;
+
+                        console.log(`PUSH NOTIFICATION: ${ pushNotificationMessage }`);
+                        let deviceToken = [oldRequest.requester.deviceId];
+                        PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
+
+                        // Send silent push to update order status in requester's app
+                        //PushController.sendSilentRefreshNotification(deviceToken,
+                        console.log("Removed helper for request ID " + req.params.requestId);
+                        res.send("Removed helper for request ID " + req.params.requestId);
+
+                    // Right now, not checking if you are trying to accept an expired request
+                  });
+                }
+
+            })
     })
+
 
 module.exports = router;
