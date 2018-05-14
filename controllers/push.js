@@ -29,8 +29,8 @@ if (nodeEnv === 'development') {
   console.log('Using ENTERPRISE push.');
 
   options = {
-    cert: __dirname + '/../push-certificates/cert.pem',
-    key: __dirname + '/../push-certificates/key.pem',
+    cert: __dirname + '/../push_certificates/cert.pem',
+    key: __dirname + '/../push_certificates/key.pem',
     production: true //working with production certificate
   };
 
