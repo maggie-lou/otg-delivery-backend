@@ -5,7 +5,7 @@ const apn = require('apn');
  */
 // Looking for development or production environment
 //const nodeEnv = process.env.NODE_ENV || '';
-const nodeEnv == 'production'
+const nodeEnv = 'production'
 
 let options = {},
   topic = '';
