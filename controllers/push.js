@@ -4,11 +4,13 @@ const apn = require('apn');
  * Determine what certificates to use and setup APN.
  */
 // Looking for development or production environment
-const nodeEnv = process.env.NODE_ENV || '';
+//const nodeEnv = process.env.NODE_ENV || '';
+const nodeEnv == 'production'
 
 let options = {},
   topic = '';
 
+if (nodeEnv === 'development') {
   // Development Push
   console.log('Using DEVELOPMENT push.');
 
@@ -21,7 +23,19 @@ let options = {},
     production: false //working with development certificate
   };
 
-  topic = 'edu.northwestern.delta.otgDev';
+  topic = 'edu.northwestern.delta.les-debug';
+} else {
+  // Enterprise push
+  console.log('Using ENTERPRISE push.');
+
+  options = {
+    cert: __dirname + '/../push-certificates/cert.pem',
+    key: __dirname + '/../push-certificates/key.pem',
+    production: true //working with production certificate
+  };
+
+  topic = 'edu.northwestern.delta.J';
+}
 
 
 options.errorCallback = (err) => {
@@ -77,6 +91,7 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
  */
 // Need to save a device token - one per user
 exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
+  console.log("In silent push");
   const apnConnection = new apn.Provider(options);
 
   const note = new apn.Notification();

@@ -245,8 +245,8 @@ router.route('/helper/cancel/:requestId')
                         let deviceToken = [oldRequest.requester.deviceId];
                         PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
 
-                        // Send silent push to update order status in requester's app
-                        //PushController.sendSilentRefreshNotification(deviceToken,
+                        // // Send silent push to update order status in requester's app
+                        // PushController.sendSilentRefreshNotification(deviceToken, "requests", undefined);
                         console.log("Removed helper for request ID " + req.params.requestId);
                         res.send("Removed helper for request ID " + req.params.requestId);
 
