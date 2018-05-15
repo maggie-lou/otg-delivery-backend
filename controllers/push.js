@@ -23,7 +23,7 @@ if (nodeEnv === 'development') {
     production: false //working with development certificate
   };
 
-  topic = 'edu.northwestern.delta.J';
+  topic = 'edu.northwestern.delta.otgDev';
 } else {
   // Enterprise push
   console.log('Using ENTERPRISE push.');
