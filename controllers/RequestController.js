@@ -50,6 +50,18 @@ router.route('/')
     });
 
 
+router.route('active')
+  // Returns all active requests for the current time
+  .get(function(req, res) {
+    Request.find({ 'endTime': {$gte: Date.now()} }, function(err, activeRequests) {
+      if (err) {
+        console.log("Error getting all active requests.");
+        res.send(err);
+        return;
+      }
+      res.send(activeRequests);
+    });
+  })
 
 router.route('/userid/:userId')
 
