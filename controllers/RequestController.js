@@ -110,15 +110,30 @@ router.route('/id/:id')
 // Updates orderdescription for request with given id
 router.post('/update/:id', function(req, res) {
   console.log("POST: Update request " + req.params.id);
-  Request.findOneAndUpdate( { _id: req.params.id}, {$set: { orderDescription: req.body.order}}, {"new": true}, function (err, oldRequest) {
-    if(err) {
-      console.log("Error updating request.");
-      res.send(err);
-    } else {
-      console.log("Request with ID " + req.params.id + " updated");
-      res.send("Request with ID " + req.params.id + " updated");
-    }
-  });
+  Request.findOneAndUpdate( 
+      { _id: req.params.id}, 
+      {$set: 
+        { 
+            requester: req.body.requester,
+            helper: req.body.helper,
+            orderDescription: req.body.orderDescription,
+            endTime: req.body.endTime,
+            status: req.body.status,
+            deliveryLocation: req.body.deliveryLocation,
+            deliveryLocationDetails: req.body.deliveryLocationDetails      
+      }}, 
+      {"new": true}, 
+      
+      function (err, oldRequest) {
+        if(err) {
+            console.log("Error updating request.");
+            res.send(err);
+        } else {
+            console.log("Request with ID " + req.params.id + " updated");
+            console.log("Updated request with params: " + req.body)
+            res.send("Request with ID " + req.params.id + " updated");
+        }
+    });
 });
 
 

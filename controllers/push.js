@@ -5,7 +5,7 @@ const apn = require('apn');
  */
 // Looking for development or production environment
 //const nodeEnv = process.env.NODE_ENV || '';
-const nodeEnv == 'production'
+const nodeEnv = 'enterprise'
 
 let options = {},
   topic = '';
@@ -23,14 +23,14 @@ if (nodeEnv === 'development') {
     production: false //working with development certificate
   };
 
-  topic = 'edu.northwestern.delta.les-debug';
+  topic = 'edu.northwestern.delta.otgDev';
 } else {
   // Enterprise push
   console.log('Using ENTERPRISE push.');
 
   options = {
-    cert: __dirname + '/../push-certificates/cert.pem',
-    key: __dirname + '/../push-certificates/key.pem',
+    cert: __dirname + '/../push_certificates/cert.pem',
+    key: __dirname + '/../push_certificates/key.pem',
     production: true //working with production certificate
   };
 
