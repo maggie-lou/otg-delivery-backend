@@ -50,7 +50,7 @@ router.route('/')
     });
 
 
-router.route('active')
+router.route('/active')
   // Returns all active requests for the current time
   .get(function(req, res) {
     Request.find({ 'endTime': {$gte: Date.now()} }, function(err, activeRequests) {
@@ -110,20 +110,20 @@ router.route('/id/:id')
 // Updates orderdescription for request with given id
 router.post('/update/:id', function(req, res) {
   console.log("POST: Update request " + req.params.id);
-  Request.findOneAndUpdate( 
-      { _id: req.params.id}, 
-      {$set: 
-        { 
+  Request.findOneAndUpdate(
+      { _id: req.params.id},
+      {$set:
+        {
             requester: req.body.requester,
             helper: req.body.helper,
             orderDescription: req.body.orderDescription,
             endTime: req.body.endTime,
             status: req.body.status,
             deliveryLocation: req.body.deliveryLocation,
-            deliveryLocationDetails: req.body.deliveryLocationDetails      
-      }}, 
-      {"new": true}, 
-      
+            deliveryLocationDetails: req.body.deliveryLocationDetails
+      }},
+      {"new": true},
+
       function (err, oldRequest) {
         if(err) {
             console.log("Error updating request.");
