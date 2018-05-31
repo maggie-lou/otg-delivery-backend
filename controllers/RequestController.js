@@ -53,14 +53,24 @@ router.route('/')
 router.route('/active')
   // Returns all active requests for the current time
   .get(function(req, res) {
-    Request.find({ 'endTime': {$gte: Date.now()} }, function(err, activeRequests) {
-      if (err) {
-        console.log("Error getting all active requests.");
-        res.send(err);
-        return;
-      }
-      res.send(activeRequests);
-    });
+    Request.find({ 'endTime': {$gte: Date.now()} })
+      .populate('requester')
+      .exec(function(err, activeRequests) {
+        if (err) {
+          console.log("Error getting all active requests.");
+          res.send(err);
+          return;
+        }
+
+        // // Add requester name to response
+        // activeRequests.forEach(function(request) {
+        //   User.findById(request.requester, function(err, requesterDoc) {
+        //     request.requesterName = requesterDoc.username;
+        //   });
+        // });
+
+        res.send(activeRequests);
+      });
   })
 
 router.route('/userid/:userId')
