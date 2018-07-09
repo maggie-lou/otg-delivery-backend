@@ -50,22 +50,22 @@ router.route('/')
     });
 
 
-router.route('/:userId')
-    //GET: get oldest request that hasn't expired
-    .get(function(req, res){
-        console.log("GET: /requests/:userId")
-        
-        console.log("Finding usernames for ID:");
-        console.log(req.params.userId);
-        Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}, 'requester': {$ne: req.params.userId}}).sort('orderTime').exec(function(err, requests) {
-            if (err){
-                console.log("Error getting latest active request");
-                res.send(err);
-                return;
-            }
-            res.send(requests[0]);
-        });
-    });
+// router.route('/:userId')
+//     //GET: get oldest request that hasn't expired
+//     .get(function(req, res){
+//         console.log("GET: /requests/:userId")
+//
+//         console.log("Finding usernames for ID:");
+//         console.log(req.params.userId);
+//         Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}, 'requester': {$ne: req.params.userId}}).sort('orderTime').exec(function(err, requests) {
+//             if (err){
+//                 console.log("Error getting latest active request");
+//                 res.send(err);
+//                 return;
+//             }
+//             res.send(requests[0]);
+//         });
+//     });
 
 
 router.route('/active')

@@ -1,12 +1,19 @@
+process.env.NODE_ENV = 'test';
+
+var mongoose = require("mongoose");
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var server = require('../server/app');
-var should = chai.should();
 
-//TESTS
+chai.use(chaiHttp);
 
-//Request logic
-describe('Blobs', function() {
-    it('should list ALL requests on /requests GET');
-    it('should return OLDEST ACTIVE request on /requests GET');
+// Run all tests
+function importTest(testName, path) {
+  describe(testName, function() {
+    require(path);
   });
+}
+
+
+describe("OTG Backend", function() {
+  importTest("Request controller", './requests-spec.js');
+});

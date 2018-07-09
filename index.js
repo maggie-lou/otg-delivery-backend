@@ -18,8 +18,10 @@ var router = express.Router();
 
 
 // Configure database and data models
+var config = require('config')
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://samboozled:sabrina@ds247648.mlab.com:47648/otg-coffee');
+console.log(config.DBHost);
+mongoose.connect(config.DBHost);
 
 // Set routes
 var RequestController = require('./controllers/RequestController');
@@ -37,3 +39,5 @@ app.use('/feedback', FeedbackController);
 
 app.listen(PORT);
 console.log('Application listening on PORT: ' + PORT);
+
+module.exports = app;
