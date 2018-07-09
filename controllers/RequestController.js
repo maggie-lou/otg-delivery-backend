@@ -79,14 +79,6 @@ router.route('/active')
           res.send(err);
           return;
         }
-
-        // // Add requester name to response
-        // activeRequests.forEach(function(request) {
-        //   User.findById(request.requester, function(err, requesterDoc) {
-        //     request.requesterName = requesterDoc.username;
-        //   });
-        // });
-
         res.send(activeRequests);
       });
   })
