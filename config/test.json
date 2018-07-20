@@ -1,3 +1,3 @@
 {
-  "DBHost": "mongodb://OTG:otg2018@ds229701.mlab.com:29701/otg-coffee-test"
+  "DBHost": "mongodb://OTGDeveloper:Dev113!@ds145951.mlab.com:45951/otg-testing"
 }
