@@ -35,11 +35,12 @@ router.route('/')
 
     })
 
-    //GET: get oldest request that hasn't expired
+router.route('/user/:userid/excluding')
+    //GET: get oldest pending request that hasn't expired, and wasn't made by the input user
     .get(function(req, res){
-        console.log("GET: /requests")
-        
-        Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}}).sort('orderTime').exec(function(err, requests) {
+        console.log("GET: /requests/userid/" + req.params.userid + '/excluding');
+
+        Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}, 'requester': {$ne: req.params.userid} }).sort('orderTime').exec(function(err, requests) {
             if (err){
                 console.log("Error getting latest active request");
                 res.send(err);
@@ -48,24 +49,6 @@ router.route('/')
             res.send(requests[0]);
         });
     });
-
-
-// router.route('/:userId')
-//     //GET: get oldest request that hasn't expired
-//     .get(function(req, res){
-//         console.log("GET: /requests/:userId")
-//
-//         console.log("Finding usernames for ID:");
-//         console.log(req.params.userId);
-//         Request.find({status: 'Pending', 'endTime': {$gte: Date.now()}, 'requester': {$ne: req.params.userId}}).sort('orderTime').exec(function(err, requests) {
-//             if (err){
-//                 console.log("Error getting latest active request");
-//                 res.send(err);
-//                 return;
-//             }
-//             res.send(requests[0]);
-//         });
-//     });
 
 
 router.route('/active')
@@ -103,7 +86,7 @@ router.route('/userid/:userId')
 
 
 
-router.route('/id/:id')
+router.route('/:id')
     .get(function(req, res) {
       console.log("GET: get request with id " + req.params.id);
       Request.findById(req.params.id, function(err, coffeeRequest) {
@@ -116,11 +99,14 @@ router.route('/id/:id')
     })
 
     .delete(function(req, res){
-        console.log("DELETE: delete request")
-
         let requestId = req.params.id;
+        console.log("DELETE: delete request with id " + req.params.id);
+
         Request.remove({ _id: requestId}, function(err){
+          if (err) {
             console.log("ERROR: could not delete given resource.")
+            return;
+          }
         });
 
         res.json({message: 'Request deleted!'});
