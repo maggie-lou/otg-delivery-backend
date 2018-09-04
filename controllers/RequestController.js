@@ -122,5 +122,23 @@ router.route('/:id/status')
     })
 
 
+router.route('/task/:userId')
+  .get(function(req, res) {
+    console.log("GET: requests/task/" + req.params.userId);
+
+    Request.find({
+      status: 'Pending',
+      endTime: {$gte: Date.now()},
+      requester: { $ne: req.params.userId }
+    }).sort('orderTime').exec(function(err, dbRequests) {
+      if (err) {
+        res.send(err);
+        return;
+      }
+
+      res.send(dbRequests[0]);
+    });
+  })
+
 
 module.exports = router;
