@@ -1,47 +1,155 @@
 var express = require('express');
 
 var User = require('../models/User');
+var Request = require('../models/request');
+var PushController = require('./push');
 const router = express.Router();
 
 router.route('/')
+  .post(function(req, res){
+    console.log("POST: /users");
 
-    .get(function(req, res){
+    var user = new User();
+    user.deviceId = req.body.deviceId;
+    user.username = req.body.username;
 
-        console.log("GET: /users");
+    user.save(function(err, userDocument){
+      if(err){
+        res.send(err);
+        return;
+      }
 
-        //Grab a user from his ID 
-        let userId = req.query.userId;
-
-        User.findById(userId, function(err, user){
-            res.send(user);
-        })
+      console.log(userDocument);
+      res.status(200);
+      res.send("User created!");
     })
+  })
 
-    .post(function(req, res){
 
-        console.log("POST: /users");
+router.route('/:id')
+  .get(function(req, res) {
+    console.log("GET: /users");
 
-        //Create user from criteria
-        let deviceId = req.body.deviceId;
-        let username = req.body.username;
+    User.findById(req.params.id, function(err, user){
+      if (err) {
+        console.log("Error getting user " + req.params.id);
+        res.send(err);
+        return;
+      }
+      res.send(user);
+    })
+  })
 
-        var user = new User();
-        user.deviceId = deviceId;
-        user.username = username;
 
-        user.save(function(err, userDocument){
+router.route('/:id/requests')
+  .get(function(req, res) {
+    console.log("GET: /users/" + req.params.id +"/requests");
 
-            if(err){
-                res.send(err);
-                return;
+    Request.find({ requester: req.params.id, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
+      if (err) {
+        console.log("Error getting requests for " + req.params.id);
+        res.send(err);
+        return;
+      }
+      res.send(requests);
+      });
+  })
+
+
+router.route('/:id/tasks')
+  .get(function(req, res) {
+    console.log("GET: /users/" + req.params.id +"/tasks");
+
+    Request.find({ helper: req.params.id, status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
+      if (err) {
+        console.log("Error getting tasks for " + req.params.id);
+        res.send(err);
+        return;
+      }
+      res.send(requests);
+      });
+  })
+
+
+router.route('/:userId/accept/:requestId')
+  .patch(function(req, res) {
+    console.log("PATCH: /users/" + req.params.userId +"/accept/" + req.params.requestId);
+    Request.findById(req.params.requestId)
+      .populate('requester')
+      .exec( (err, request) => {
+        if (err) {
+          res.status(500);
+          res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
+          return;
+        } else if (Date.now() > request.endTime) {
+          res.status(405);
+          res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
+          return;
+        } else if (request.status == 'Accepted') {
+          res.status(405);
+          res.send("Request " + req.params.requestId + " has already been accepted. Cannot be re-accepted.");
+          return;
+        }
+
+        request.status = 'Accepted';
+        request.helper = req.params.userId;
+
+        request.save( (err) => {
+          if (err) {
+            res.status(400);
+            res.send("Could not accept request " + requestId + ". Its status remains pending.");
+            return;
+          }
+
+          User.findById(req.params.userId, (err, helper) => {
+            if (err) {
+              res.status(400);
+              res.send("Could not find helper " + req.params.userId + ", so request " + req.params.requestId + " could not be accepted. Its status remains pending.");
+              return;
             }
 
-            console.log(userDocument);
+            var pushNotificationMessage = `${ helper.username } accepted the request for ${request.orderDescription} by ${ request.requester.username }!`;
+            PushController.sendPushWithMessage( [request.requester.deviceId], pushNotificationMessage);
             res.status(200);
-            res.send(userDocument);
+            res.send("Accepted request with ID " + req.params.requestId + " by " + req.params.userId);
+          });
+        });
 
-        })
+      });
+  })
 
-    })
+
+// Let a helper cancel his/her ability to complete a task
+router.route('/:userId/removeHelper/:requestId')
+  .patch(function(req, res) {
+    console.log("PATCH: /users/" + req.params.userId +"/removeHelper/" + req.params.requestId);
+    Request.findOneAndUpdate( { _id: req.params.requestId}, {$set: { helper: null, status: "Pending"}})
+      .populate('requester')
+      .exec(function(err, oldRequest) {
+        if(err) {
+          console.log("Error updating request.");
+          res.send(err);
+          return;
+        } else {
+          var helperId = oldRequest.helper;
+          User.findById(helperId, function(err, helperDoc){
+            if(err){
+              console.log("Error getting former helper for a canceled task.");
+              res.send(err);
+              return;
+            }
+
+            let pushNotificationMessage = `Unfortunately, ${ helperDoc.username } can no longer deliver your request for a ${ oldRequest.orderDescription }. We apologize for the inconvenience and your request can still be accepted by other helpers.`;
+
+            let deviceToken = [oldRequest.requester.deviceId];
+            PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
+
+            res.status(200);
+            res.send("Removed helper " + helperId + " from request with ID " + req.params.requestId);
+          });
+        }
+      })
+  })
+
 
 module.exports = router;

@@ -12,13 +12,13 @@ var Request = require('../models/request');
 describe('Requests', () => {
   var requesterId = '5afb86420759d5001400990f'
   var requestId = '5afcaa441be2bb00147e6dd0'
+  var now = new Date();
+  var twoHoursLater = (new Date).setHours(now.getHours() + 2);
 
   beforeEach((done) => {
     // Load test db with clean data
     Request.remove({}, (err) => {
       if (err) return done(err);
-      var now = new Date();
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
 
       var testRequest = new Request({
         _id: requestId,
@@ -48,9 +48,6 @@ describe('Requests', () => {
 
   describe('/POST request', function() {
     it ('should add a single request', (done) => {
-      var now = new Date();
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
-
       chai.request(server)
         .post('/requests')
         .send({ 'orderDescription': 'Feed me!', 'endTime': twoHoursLater, 'status': 'Pending', 'deliveryLocation': 'home', 'deliveryLocationDetails': 'Yum!' })
@@ -63,11 +60,31 @@ describe('Requests', () => {
   });
 
 
+  describe('/GET request', function() {
+    it ('should get the requests matching the query parameters', (done) => {
+      var req = new Request({
+        requester: requesterId,
+        orderTime: now,
+        orderDescription: 'Matches query',
+        endTime: twoHoursLater,
+        status: 'Completed',
+      });
+
+      req.save().then( () => {
+        chai.request(server)
+          .get('/requests?status=Completed')
+          .end(function(err, res) {
+            res.should.have.status(200);
+            res.body.should.have.length(1);
+            res.body[0].orderDescription.should.equal('Matches query');
+            done();
+          });
+      })
+    });
+  });
 
   describe('/GET requests/:id', function() {
     it ('should return the request with the input id', (done) => {
-      var now = new Date();
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
       var id = '9afcaa441be2bb00147e6dd0';
       var request = new Request({
         _id: id,
@@ -75,17 +92,15 @@ describe('Requests', () => {
         endTime: twoHoursLater,
         status: 'Pending',
       });
-      request.save(function(err) {
-        console.log(err);
+      request.save().then( () => {
+        chai.request(server)
+          .get('/requests/' + id)
+          .end(function(err, res) {
+            res.should.have.status(200);
+            res.body.orderDescription.should.equal('Desired request');
+            done();
+          });
       });
-
-      chai.request(server)
-        .get('/requests/' + id)
-        .end(function(err, res) {
-          res.should.have.status(200);
-          res.body.orderDescription.should.equal('Desired request');
-          done();
-        });
     });
   });
 
@@ -123,172 +138,157 @@ describe('Requests', () => {
           });
         });
     });
-
   });
 
 
 
-  describe('/GET requests/user/:userId/excluding', function() {
-    it ('should return the oldest unexpired request', (done) => {
-      var now = new Date();
-      var oneHourAgo = (new Date).setHours(now.getHours() - 1);
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
-      var requesterId = '6afb86420759d5001400990f'
-
-      var olderRequest = new Request({
-        orderTime: oneHourAgo,
-        orderDescription: 'Older request',
-        endTime: twoHoursLater,
-        status: 'Pending',
-        deliveryLocation: '',
-        deliveryLocationDetails: '',
-      });
-      olderRequest.save(function(err) {
-        console.log(err);
-      });
-
+  describe('/PATCH requests/:id', function() {
+    it ('should update the request with the input id', (done) => {
       chai.request(server)
-        .get('/requests/user/' + requesterId + '/excluding')
-        .end((err, res) => {
+        .patch('/requests/' + requestId)
+        .send({ 'requester': requesterId, 'helper': null, 'orderDescription': 'Tamales', 'status': 'Accepted', 'endTime': twoHoursLater,  'deliveryLocation': 'Tamale haus', 'deliveryLocationDetails': 'Yum!' })
+        .end(function(err, res) {
           res.should.have.status(200);
-          res.body.orderDescription.should.equal('Older request');
-
-          done();
-        });
-    });
-
-    it ('should not return an expired request', (done) => {
-      var now = new Date();
-      var oneHourAgo = (new Date).setHours(now.getHours() - 1);
-      var twoHoursAgo = (new Date).setHours(now.getHours() - 2);
-      var requesterId = '6afb86420759d5001400990f'
-
-      var expiredRequest = new Request({
-        orderTime: twoHoursAgo,
-        orderDescription: 'Expired request',
-        endTime: oneHourAgo,
-        status: 'Pending',
-        deliveryLocation: '',
-        deliveryLocationDetails: '',
-      });
-      expiredRequest.save();
-
-      chai.request(server)
-        .get('/requests/user/' + requesterId + '/excluding')
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.orderDescription.should.equal('Pre-loaded burrito');
-
-          done();
-        });
-
-    });
-
-    it ('should not return a request that has already been accepted', (done) => {
-      var now = new Date();
-      var oneHourAgo = (new Date).setHours(now.getHours() - 1);
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
-      var requesterId = '6afb86420759d5001400990f'
-
-      var acceptedRequest = new Request({
-        orderTime: oneHourAgo,
-        orderDescription: 'Accepted request',
-        endTime: twoHoursLater,
-        status: 'Accepted',
-        deliveryLocation: '',
-        deliveryLocationDetails: '',
-      });
-      acceptedRequest.save();
-
-      chai.request(server)
-        .get('/requests/user/' + requesterId + '/excluding')
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.orderDescription.should.equal('Pre-loaded burrito');
-
-          done();
-        });
-
-    });
-
-    it ('should not return a request made by the input user', (done) => {
-      var now = new Date();
-      var oneHourLater = (new Date).setHours(now.getHours() + 1);
-      var twoHoursLater = (new Date).setHours(now.getHours() + 2);
-      var nonInputRequesterId = '6afb86420759d5001400990f'
-
-      var nonInputRequest = new Request({
-        requester: nonInputRequesterId,
-        orderTime: oneHourLater,
-        orderDescription: 'Request from a different user',
-        endTime: twoHoursLater,
-        status: 'Pending',
-        deliveryLocation: '',
-        deliveryLocationDetails: '',
-      });
-      nonInputRequest.save();
-
-      chai.request(server)
-        .get('/requests/user/' + requesterId + '/excluding')
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.orderDescription.should.equal('Request from a different user');
-
-          done();
+          res.text.should.equal('Request with ID ' + requestId + ' updated');
+          Request.findById(requestId, function(err, coffeeRequest) {
+            coffeeRequest.status.should.equal('Accepted');
+            coffeeRequest.orderDescription.should.equal('Tamales');
+            coffeeRequest.deliveryLocation.should.equal('Tamale haus');
+            coffeeRequest.deliveryLocationDetails.should.equal('Yum!');
+            done();
+          });
         });
     });
   });
 
-  describe('/GET request/active', function() {
-    it ('should return all requests for the current time', (done) => {
+  describe('/PATCH requests/:id/status', function() {
+    it ('should update the status of the request with the input id', (done) => {
       chai.request(server)
-        .get('/requests/active')
-        .end( (err, res) => {
+        .patch('/requests/' + requestId + '/status')
+        .send({ 'status': 'Completed' })
+        .end(function(err, res) {
           res.should.have.status(200);
-          res.body.should.have.length(1);
-          res.body[0].orderDescription.should.equal('Pre-loaded burrito');
-          done();
-        });
-    });
-
-    it ('should not return non-active requests', (done) => {
-      var now = new Date();
-      var oneHourAgo = (new Date).setHours(now.getHours() - 1);
-      var twoHoursAgo = (new Date).setHours(now.getHours() - 2);
-
-      var oldRequest = new Request({
-        orderTime: oneHourAgo,
-        orderDescription: 'Accepted request',
-        endTime: twoHoursAgo,
-      });
-      oldRequest.save();
-
-      chai.request(server)
-        .get('/requests/active')
-        .end( (err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.length(1);
-          done();
+          res.text.should.equal('Request status for ID ' + requestId + ' updated');
+          Request.findById(requestId, function(err, coffeeRequest) {
+            coffeeRequest.status.should.equal('Completed');
+            coffeeRequest.orderDescription.should.equal('Pre-loaded burrito');
+            coffeeRequest.deliveryLocation.should.equal('Burrito haus');
+            done();
+          });
         });
     });
   });
+  // describe('/GET requests/user/:userId/excluding', function() {
+  //   it ('should return the oldest unexpired request', (done) => {
+  //     var oneHourAgo = (new Date).setHours(now.getHours() - 1);
+  //     var twoHoursLater = (new Date).setHours(now.getHours() + 2);
+  //     var requesterId = '6afb86420759d5001400990f'
   //
-  // describe('/GET request/userid', function() {
-  //   it ('should return all unexpired requests for the user with the input id', (done) => {
+  //     var olderRequest = new Request({
+  //       orderTime: oneHourAgo,
+  //       orderDescription: 'Older request',
+  //       endTime: twoHoursLater,
+  //       status: 'Pending',
+  //       deliveryLocation: '',
+  //       deliveryLocationDetails: '',
+  //     });
+  //     olderRequest.save(function(err) {
+  //       console.log(err);
+  //     });
+  //
+  //     chai.request(server)
+  //       .get('/requests/user/' + requesterId + '/excluding')
+  //       .end((err, res) => {
+  //         res.should.have.status(200);
+  //         res.body.orderDescription.should.equal('Older request');
+  //
+  //         done();
+  //       });
+  //   });
+  //
+  //   it ('should not return an expired request', (done) => {
+  //     var oneHourAgo = (new Date).setHours(now.getHours() - 1);
+  //     var twoHoursAgo = (new Date).setHours(now.getHours() - 2);
+  //     var requesterId = '6afb86420759d5001400990f'
+  //
+  //     var expiredRequest = new Request({
+  //       orderTime: twoHoursAgo,
+  //       orderDescription: 'Expired request',
+  //       endTime: oneHourAgo,
+  //       status: 'Pending',
+  //       deliveryLocation: '',
+  //       deliveryLocationDetails: '',
+  //     });
+  //     expiredRequest.save();
+  //
+  //     chai.request(server)
+  //       .get('/requests/user/' + requesterId + '/excluding')
+  //       .end((err, res) => {
+  //         res.should.have.status(200);
+  //         res.body.orderDescription.should.equal('Pre-loaded burrito');
+  //
+  //         done();
+  //       });
   //
   //   });
+  //
+  //   it ('should not return a request that has already been accepted', (done) => {
+  //     var oneHourAgo = (new Date).setHours(now.getHours() - 1);
+  //     var twoHoursLater = (new Date).setHours(now.getHours() + 2);
+  //     var requesterId = '6afb86420759d5001400990f'
+  //
+  //     var acceptedRequest = new Request({
+  //       orderTime: oneHourAgo,
+  //       orderDescription: 'Accepted request',
+  //       endTime: twoHoursLater,
+  //       status: 'Accepted',
+  //       deliveryLocation: '',
+  //       deliveryLocationDetails: '',
+  //     });
+  //     acceptedRequest.save();
+  //
+  //     chai.request(server)
+  //       .get('/requests/user/' + requesterId + '/excluding')
+  //       .end((err, res) => {
+  //         res.should.have.status(200);
+  //         res.body.orderDescription.should.equal('Pre-loaded burrito');
+  //
+  //         done();
+  //       });
+  //
+  //   });
+  //
+  //   it ('should not return a request made by the input user', (done) => {
+  //     var now = new Date();
+  //     var oneHourLater = (new Date).setHours(now.getHours() + 1);
+  //     var twoHoursLater = (new Date).setHours(now.getHours() + 2);
+  //     var nonInputRequesterId = '6afb86420759d5001400990f'
+  //
+  //     var nonInputRequest = new Request({
+  //       requester: nonInputRequesterId,
+  //       orderTime: oneHourLater,
+  //       orderDescription: 'Request from a different user',
+  //       endTime: twoHoursLater,
+  //       status: 'Pending',
+  //       deliveryLocation: '',
+  //       deliveryLocationDetails: '',
+  //     });
+  //     nonInputRequest.save();
+  //
+  //     chai.request(server)
+  //       .get('/requests/user/' + requesterId + '/excluding')
+  //       .end((err, res) => {
+  //         res.should.have.status(200);
+  //         res.body.orderDescription.should.equal('Request from a different user');
+  //
+  //         done();
+  //       });
+  //   });
   // });
+
   // describe('/POST request/status/:id', function() {
   //   it ('should update the given request\'s status', (done) => {
   //       // should not create an additional request
-  //   });
-  // });
-  // describe('/GET request/accept/:userId', function() {
-  //   it ('should get all requests that the given user has accepted', (done) => {
-  //   });
-  // });
-  // describe('/POST request/accept/:userId', function() {
-  //   it ('should assign the given user as the helper for a request', (done) => {
   //   });
   // });
   // describe('/DELETE request/helper/cancel/:requestId', function() {
