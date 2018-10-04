@@ -69,7 +69,6 @@ describe('Users', () => {
         .send({ 'deviceId': 'New Device', 'username': "Hungry" })
         .end(function(err, res) {
           res.should.have.status(200);
-          res.text.should.equal('User created!');
           done();
         });
     });

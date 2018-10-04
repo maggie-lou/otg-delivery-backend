@@ -21,7 +21,7 @@ router.route('/')
 
       console.log(userDocument);
       res.status(200);
-      res.send("User created!");
+      res.send(userDocument);
     })
   })
 
