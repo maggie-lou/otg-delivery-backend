@@ -20,7 +20,6 @@ router.route('/')
       }
 
       console.log(userDocument);
-      res.status(200);
       res.send(userDocument);
     })
   })
@@ -110,7 +109,6 @@ router.route('/:userId/accept/:requestId')
 
             var pushNotificationMessage = `${ helper.username } accepted the request for ${request.orderDescription} by ${ request.requester.username }!`;
             PushController.sendPushWithMessage( [request.requester.deviceId], pushNotificationMessage);
-            res.status(200);
             res.send("Accepted request with ID " + req.params.requestId + " by " + req.params.userId);
           });
         });
@@ -144,7 +142,6 @@ router.route('/:userId/removeHelper/:requestId')
             let deviceToken = [oldRequest.requester.deviceId];
             PushController.sendPushWithMessage(deviceToken, pushNotificationMessage);
 
-            res.status(200);
             res.send("Removed helper " + helperId + " from request with ID " + req.params.requestId);
           });
         }

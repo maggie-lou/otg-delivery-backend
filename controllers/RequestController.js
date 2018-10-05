@@ -82,7 +82,6 @@ router.route('/:id')
       {$set:
         {
           requester: req.body.requester,
-          helper: req.body.helper,
           orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
           status: req.body.status,
@@ -106,7 +105,7 @@ router.route('/:id')
 // Route that changes the status of a given request
 router.route('/:id/status')
     .patch(function(req, res) {
-        console.log("POST: Change request status for " + req.params.id);
+        console.log("PATCH: Change request status for " + req.params.id);
 
         Request.findOneAndUpdate( { _id: req.params.id}, {$set: { status: req.body.status}}, {"new": true}, function (err, newRequest) {
           if(err) {
@@ -136,6 +135,7 @@ router.route('/task/:userId')
         return;
       }
 
+      console.log(dbRequests[0]);
       res.send(dbRequests[0]);
     });
   })
