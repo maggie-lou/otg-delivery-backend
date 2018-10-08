@@ -26,6 +26,8 @@ mongoose.connect(config.DBHost);
 // Set routes
 var RequestController = require('./controllers/RequestController');
 var UserController = require('./controllers/UserController');
+var ItemController = require('./controllers/ItemController');
+var LocationController = require('./controllers/LocationController');
 var LoggingController = require('./controllers/LoggingController');
 var FeedbackController = require('./controllers/FeedbackController');
 
@@ -34,6 +36,8 @@ var PushController = require('./controllers/push');
 
 app.use('/requests', RequestController);
 app.use('/users', UserController);
+app.use('/items', ItemController);
+app.use('/locations', LocationController);
 app.use('/logging', LoggingController);
 app.use('/feedback', FeedbackController);
 
