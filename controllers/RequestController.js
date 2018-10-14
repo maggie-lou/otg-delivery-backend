@@ -35,30 +35,37 @@ router.route('/')
     })
 
     .get(function(req, res) {
+      console.log("GET: /request");
       var status = req.query.status || "";
 
       Request.find({
         'endTime': {$gte: Date.now()},
         'status': new RegExp(status),
-      }, function(err, dbRequests) {
-        if (err) {
-          console.log("Error getting requests");
-          res.send(err);
-        }
-        res.send(dbRequests);
-      });
+      })
+        .populate('orderDescription')
+        .populate('requester')
+        .exec(function(err, dbRequests) {
+          if (err) {
+            console.log("Error getting requests");
+            res.send(err);
+          }
+          res.send(dbRequests);
+        })
     })
 
 router.route('/:id')
     .get(function(req, res) {
       console.log("GET: get request with id " + req.params.id);
-      Request.findById(req.params.id, function(err, coffeeRequest) {
-        if (err) {
-          console.log("Error getting request " + req.params.id);
-          res.send(err);
-        }
-        res.send(coffeeRequest)
-      });
+      Request.findById(req.params.id)
+        .populate('orderDescription')
+        .populate('requester')
+        .exec(function(err, request) {
+          if (err) {
+            console.log("Error getting request " + req.params.id);
+            res.send(err);
+          }
+          res.send(request)
+        })
     })
 
     .delete(function(req, res){
@@ -129,11 +136,15 @@ router.route('/task/:userId')
       status: 'Pending',
       endTime: {$gte: Date.now()},
       requester: { $ne: req.params.userId }
-    }).sort('orderTime').exec(function(err, dbRequests) {
-      if (err) {
-        res.send(err);
-        return;
-      }
+    })
+      .sort('orderTime')
+      .populate('orderDescription')
+      .populate('requester')
+      .exec(function(err, dbRequests) {
+        if (err) {
+          res.send(err);
+          return;
+        }
 
       console.log(dbRequests[0]);
       res.send(dbRequests[0]);

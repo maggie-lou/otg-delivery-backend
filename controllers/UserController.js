@@ -44,14 +44,17 @@ router.route('/:id/requests')
   .get(function(req, res) {
     console.log("GET: /users/" + req.params.id +"/requests");
 
-    Request.find({ requester: req.params.id, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}}, function(err, requests) {
-      if (err) {
-        console.log("Error getting requests for " + req.params.id);
-        res.send(err);
-        return;
-      }
-      res.send(requests);
-      });
+    Request.find({ requester: req.params.id, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}})
+      .populate('orderDescription')
+      .populate('requester')
+      .exec(function(err, requests) {
+        if (err) {
+          console.log("Error getting requests for " + req.params.id);
+          res.send(err);
+          return;
+        }
+        res.send(requests);
+      })
   })
 
 
@@ -59,14 +62,17 @@ router.route('/:id/tasks')
   .get(function(req, res) {
     console.log("GET: /users/" + req.params.id +"/tasks");
 
-    Request.find({ helper: req.params.id, status: 'Accepted', 'endTime': {$gte: Date.now()}}, function(err, requests) {
-      if (err) {
-        console.log("Error getting tasks for " + req.params.id);
-        res.send(err);
-        return;
-      }
-      res.send(requests);
-      });
+    Request.find({ helper: req.params.id, status: 'Accepted', 'endTime': {$gte: Date.now()}})
+      .populate('orderDescription')
+      .populate('requester')
+      .exec(function(err, requests) {
+        if (err) {
+          console.log("Error getting tasks for " + req.params.id);
+          res.send(err);
+          return;
+        }
+        res.send(requests);
+      })
   })
 
 

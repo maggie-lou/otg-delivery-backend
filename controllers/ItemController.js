@@ -52,6 +52,7 @@ router.route('/:id')
           console.log("Error getting item " + req.params.id);
           res.send(err);
         }
+        console.log(item);
         res.send(item)
       });
     })
