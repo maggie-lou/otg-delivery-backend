@@ -95,14 +95,15 @@ router.route('/:id')
           deliveryLocation: req.body.deliveryLocation,
           deliveryLocationDetails: req.body.deliveryLocationDetails
         }},
-      {"new": true},
+      { new: true},
 
-      function (err, oldRequest) {
+      function (err, updatedRequest) {
         if(err) {
           console.log("Error updating request.");
           res.send(err);
         } else {
-          console.log("Request with ID " + req.params.id + " updated");
+          console.log("Request with ID " + req.params.id + " updated to");
+          console.log(updatedRequest);
           res.send("Request with ID " + req.params.id + " updated");
         }
       });
@@ -146,9 +147,13 @@ router.route('/task/:userId')
           return;
         }
 
-      console.log(dbRequests[0]);
-      res.send(dbRequests[0]);
-    });
+        if (dbRequests.length == 0) {
+          console.log("No available tasks");
+        } else {
+          console.log(dbRequests[0]);
+        }
+        res.send(dbRequests[0]);
+      });
   })
 
 
