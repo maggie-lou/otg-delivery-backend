@@ -36,11 +36,15 @@ router.route('/')
 
     .get(function(req, res) {
       console.log("GET: /request");
+const {ObjectId} = require('mongodb');
       var status = req.query.status || "";
+      var excludingRequesterId = req.query.excluding || "000000000000000000000000";
+      excludingRequesterId = ObjectId(excludingRequesterId);
 
       Request.find({
         'endTime': {$gte: Date.now()},
         'status': new RegExp(status),
+        'requester': {$ne: excludingRequesterId},
       })
         .populate('orderDescription')
         .populate('requester')
