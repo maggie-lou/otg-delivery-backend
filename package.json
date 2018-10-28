@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --timeout 10000 -R spec",
-    "start": "set NODE_ENV=dev && node index.js"
+    "start": "set NODE_ENV=dev && node index.js",
+    "populatedata": "node scripts/populate_data.js"
   },
   "author": "",
   "license": "ISC",
