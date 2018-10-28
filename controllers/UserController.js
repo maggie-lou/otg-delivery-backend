@@ -12,6 +12,7 @@ router.route('/')
     var user = new User();
     user.deviceId = req.body.deviceId;
     user.username = req.body.username;
+    user.phoneNumber = req.body.phoneNumber;
 
     user.save(function(err, userDocument){
       if(err){
