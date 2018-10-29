@@ -12,17 +12,17 @@ router.route('/')
         console.log("POST: logging")
 
         var loggingEvent = new LoggingEvent();
-        loggingEvent.username = req.body.username;
-        loggingEvent.locationEntered = req.body.locationEntered;
+        loggingEvent.requesterName = req.body.requester;
+        loggingEvent.location = req.body.location;
         loggingEvent.eventTime = Date.now();
         loggingEvent.eventType = req.body.eventType;
-        loggingEvent.requestId = req.body.requestId;
+        loggingEvent.details = req.body.details;
 
         //save event
         loggingEvent.save(function(err){
             //return the error in response if it exists
             if (err){
-                console.log("Error logging geofence entrance event.");
+                console.log("Error logging event with type " + req.body.eventType);
                 res.send(err);
             }
 
