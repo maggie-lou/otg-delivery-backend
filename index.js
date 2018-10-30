@@ -19,12 +19,12 @@ var router = express.Router();
 
 // Configure database and data models
 const env = "" + process.env.NODE_ENV;
-console.log("Env: " + env);
+console.log("ENV: " + env);
 const config = require('./config/db')[env || "dev"];
 console.log(config);
 
 var mongoose = require('mongoose');
-mongoose.connect(config.DBHost);
+mongoose.connect(config.database);
 
 // Set routes
 var RequestController = require('./controllers/RequestController');
