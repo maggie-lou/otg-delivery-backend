@@ -1,5 +1,8 @@
 var request = require("request");
 
+//var apiURL = "http://localhost:8080/items";
+var apiURL = "https://otg-delivery.herokuapp.com/";
+
 var tomateItems = [
   ["Chicken Tinga Burrito", "Chicken sauteed with cabbage, onion, and chipotle sauce.", 6.50],
   ["Yucca with Chimichuri Burrito", "Served with mashed Cuban beans and rice.", 6.50],
@@ -32,25 +35,58 @@ var tomateItems = [
 
 ]
 
+var locations = [
+  ["Tomate", 42.058345, -87.683724],
+]
+
 function postTomateItems(items) {
+  var developmentLocationId = "5bb9594d290593692fc1472f";
+  var productionLocationId = "5bd8e5c9379744001512b107";
+
   for (i=0; i<items.length; i++) {
     var item = items[i];
+    var api = apiURL + "items";
     request.post(
-      "http://localhost:8080/items",
+      api,
       { json: {
         name: item[0],
         price: item[2],
-        location: "5bb9594d290593692fc1472f",
+        location: productionLocationId,
         description: item[1],
         }
       },
       function(error, response, body) {
         if (error) {
-          console.log("Failed to populate data");
+          console.log("Failed to populate Tomate item data");
         }
       }
     );
   }
 }
 
+function postLocations(locations) {
+  for (i=0; i<locations.length; i++) {
+    var location = locations[i];
+    var api = apiURL + "locations";
+    request.post(
+      api,
+      { json: {
+        name: location[0],
+        latitude: location[1],
+        longitude: location[2],
+        }
+      },
+      function(error, response, body) {
+        if (error) {
+          console.log("Failed to populate location data");
+        }
+      }
+    );
+  }
+}
+
+
+// ********** CALLS ************************
+
 postTomateItems(tomateItems);
+//postLocations(locations);
