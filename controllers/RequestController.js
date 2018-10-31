@@ -95,7 +95,7 @@ router.route('/:id')
           requester: req.body.requester,
           orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
-          status: req.body.status,
+          // status: req.body.status, // Bug where it's using cached old status
           deliveryLocation: req.body.deliveryLocation,
           deliveryLocationDetails: req.body.deliveryLocationDetails
         }},
