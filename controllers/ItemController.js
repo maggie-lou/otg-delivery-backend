@@ -33,14 +33,16 @@ router.route('/')
         res.send(err);
       }
 
-      Item.find({ 'location': location[0]._id }, function(err, items) {
-        if (err) {
-          console.log("Error getting items for location " + location);
-          res.send(err);
-        }
-        console.log(items);
-        res.send(items);
-      });
+      Item.find({ 'location': location[0]._id })
+        .sort('name')
+        .exec(function(err, items) {
+          if (err) {
+            console.log("Error getting items for location " + location);
+            res.send(err);
+          }
+          console.log(items);
+          res.send(items);
+        })
     });
   })
 
