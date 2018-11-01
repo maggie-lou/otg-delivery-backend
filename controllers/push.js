@@ -34,7 +34,7 @@ if (nodeEnv === 'development') {
     production: true //working with production certificate
   };
 
-  topic = 'edu.northwestern.delta.J';
+  topic = 'edu.northwestern.delta.B';
 }
 
 
