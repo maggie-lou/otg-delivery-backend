@@ -99,6 +99,7 @@ router.route('/:userId/accept/:requestId')
 
         request.status = 'Accepted';
         request.helper = req.params.userId;
+        request.deliveryLocation = req.body.meetingPoint;
 
         request.save( (err) => {
           if (err) {
