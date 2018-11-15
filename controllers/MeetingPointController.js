@@ -23,6 +23,8 @@ router.route('/')
     setTimeout(function () {
       if (!responseSent) {
         console.log(`Sending default option: ${requesterDestOptions[0]}`);
+        pushNotificationMessage = "Sending default option for meeting point";
+        PushController.sendPushToMyself(pushNotificationMessage);
         res.send(requesterDestOptions[0]);
       }
     }, waitingThreshold);
