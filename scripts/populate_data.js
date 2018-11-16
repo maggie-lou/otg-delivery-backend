@@ -35,8 +35,54 @@ var tomateItems = [
 
 ]
 
+var techExpressItems = [
+  "Quaker Oatmeal",
+  "Kind Bar",
+  "Cliff Bar",
+  "Builder Protein Bar",
+  "Potato Chips",
+  "Ritz Blitz",
+  "Cheez It Classic",
+  "Cheez It Grooves",
+  "Nutter Butter Bites",
+  "Candy Bar",
+  "Orbit Gum",
+  "Coke",
+  "Cherry Coke",
+  "Diet Coke",
+  "Sprite",
+  "Orange Fanta",
+  "Bottled Water",
+  "Coconut Water",
+  "Honest Tea",
+  "Vitamin Water",
+  "Powerade",
+  "Minute Maid Lemonade",
+  "Monster",
+  "Dunkin Donuts Iced Coffee",
+  "Muffin",
+  "Donut",
+  "Plain Croissant",
+  "Almond Croissant",
+  "Strawberry and Cheese Croissant",
+  "Danish",
+  "Cookie",
+  "Hot Coffee",
+  "Sushi - Veggie",
+  "Sushi - California Roll",
+  "Chipotle Gouda Wrap",
+  "Chicken Caesar Wrap",
+  "Red Pepper Hummus Wrap",
+  "Hummus and Pita",
+  "Caprese Salad",
+  "Garden Salad",
+  "Italian Pasta Salad",
+]
+
 var locations = [
   ["Tomate", 42.058345, -87.683724],
+  ["Tech Express", 42.057816, -87.677123], // On Sheridan
+  //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
 
 function postTomateItems(items) {
@@ -58,6 +104,31 @@ function postTomateItems(items) {
       function(error, response, body) {
         if (error) {
           console.log("Failed to populate Tomate item data");
+        }
+      }
+    );
+  }
+}
+
+function postTechExpressItems() {
+  var productionLocationId = "5bee0ab702d1dd0015c27ab3";
+  var developmentLocationId = "5bee0a7bd563f60cfa8c3bdb";
+
+  for (i=0; i<techExpressItems.length; i++) {
+    var item = techExpressItems[i];
+    var api = apiURL + "items";
+    request.post(
+      api,
+      { json: {
+        name: item,
+        price: 0,
+        location: developmentLocationId,
+        description: "",
+        }
+      },
+      function(error, response, body) {
+        if (error) {
+          console.log("Failed to populate Tech Express item data");
         }
       }
     );
@@ -89,4 +160,5 @@ function postLocations(locations) {
 // ********** CALLS ************************
 
 postTomateItems(tomateItems);
-//postLocations(locations);
+postTechExpressItems();
+// postLocations(locations);
