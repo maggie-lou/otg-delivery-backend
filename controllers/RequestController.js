@@ -22,6 +22,8 @@ router.route('/')
         request.deliveryLocation = req.body.deliveryLocation;
         request.deliveryLocationDetails = req.body.deliveryLocationDetails;
 
+        PushController.sendPushToMyself("Request submitted. Expires " + req.body.endTime);
+
         //save request
         request.save(function(err){
             //return the error in response if it exists

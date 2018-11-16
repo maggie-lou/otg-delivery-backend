@@ -117,6 +117,8 @@ router.route('/:userId/accept/:requestId')
 
             var pushNotificationMessage = `${ helper.username } accepted your request! Please meet them at ${req.body.meetingPoint} when they text you!`;
             PushController.sendPushWithMessage( [request.requester.deviceId], pushNotificationMessage);
+
+            PushController.sendPushToMyself(`${helper.username} accepted a task!`);
             res.send("Accepted request with ID " + req.params.requestId + " by " + req.params.userId);
           });
         });

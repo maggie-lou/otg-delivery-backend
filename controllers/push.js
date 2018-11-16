@@ -118,7 +118,7 @@ exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
 
 
 exports.sendPushToMyself = (message) => {
-  var myDeviceId = "6175B078F2DA5E664B386C17FA7F0EC0AB26D88F3E5F0D7047B0FC6542D74E31";
+  var myDeviceId = "6387E7E91432095D30F3B609CFEC2C0B87C2228F0B76A80D99027883CC2393A8";
 
   exports.sendPushWithMessage([myDeviceId], message);
 };
