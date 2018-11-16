@@ -52,7 +52,7 @@ options.errorCallback = (err) => {
 // Texts to phone
 // Send to one device, array with one token
 exports.sendPushWithMessage = (deviceTokens, message, response) => {
-  // console.log("In send push with message");
+  console.log("In send push with message");
   // console.log(deviceTokens[0]);
   const apnConnection = new apn.Provider(options);
 
@@ -118,6 +118,7 @@ exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
 
 
 exports.sendPushToMyself = (message) => {
+  console.log("In send push to myself");
   var myDeviceId = "6387E7E91432095D30F3B609CFEC2C0B87C2228F0B76A80D99027883CC2393A8";
 
   exports.sendPushWithMessage([myDeviceId], message);
