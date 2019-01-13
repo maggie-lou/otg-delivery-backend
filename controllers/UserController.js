@@ -65,7 +65,7 @@ router.route('/:id/tasks')
   .get(function(req, res) {
     console.log("GET: /users/" + req.params.id +"/tasks");
 
-    Request.find({ helper: req.params.id, status: 'Accepted', 'endTime': {$gte: Date.now()}})
+    Request.find({ helper: req.params.id, status: 'Accepted'})
       .populate('orderDescription')
       .populate('requester')
       .exec(function(err, requests) {
