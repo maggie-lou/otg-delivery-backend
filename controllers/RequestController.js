@@ -21,6 +21,7 @@ router.route('/')
         request.status = req.body.status;
         request.deliveryLocation = req.body.deliveryLocation;
         request.deliveryLocationDetails = req.body.deliveryLocationDetails;
+      request.pickupLocation = req.body.pickupLocation;
 
         PushController.sendPushToMyself("Request submitted. Expires " + req.body.endTime);
 

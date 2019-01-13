@@ -10,6 +10,7 @@ var RequestSchema = new Schema({
 	status: String,
   deliveryLocation: String,
   deliveryLocationDetails: String,
+  pickupLocation:String,
 });
 
 module.exports = mongoose.model('Request', RequestSchema);
