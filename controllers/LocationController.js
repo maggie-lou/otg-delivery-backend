@@ -23,4 +23,16 @@ router.route('/')
     })
   })
 
+  .get(function(req, res) {
+    console.log("GET: /location");
+    Location.find({})
+      .exec(function(err, dbRequests) {
+        if (err) {
+          console.log("Error getting requests");
+          res.send(err);
+        }
+        res.send(dbRequests);
+      })
+  })
+
 module.exports = router;
