@@ -1,7 +1,10 @@
 var request = require("request");
 
-//var apiURL = "http://localhost:8080/items";
-var apiURL = "https://otg-delivery.herokuapp.com/";
+var production = false;
+
+var devURL = "http://localhost:8080/";
+var prodURL = "https://otg-delivery.herokuapp.com/";
+var apiURL = production? prodURL : devURL;
 
 var tomateItems = [
   ["Chicken Tinga Burrito", "Chicken sauteed with cabbage, onion, and chipotle sauce.", 6.50],
@@ -35,6 +38,11 @@ var tomateItems = [
 
 ]
 
+var coffeeLabItems = [
+  "Scone",
+  "Cappucino",
+  "Mocha",
+]
 var techExpressItems = [
   "Quaker Oatmeal",
   "Kind Bar",
@@ -87,13 +95,25 @@ var techExpressItems = [
 
 var locations = [
   ["Tomate", 42.058345, -87.683724],
-  ["Tech Express", 42.057816, -87.677123], // On Sheridan
+  ["TechExpress", 42.057816, -87.677123], // On Sheridan
+  ["CoffeeLab", 42.058455, -87.683737],
+  ["Starbucks",42.049677, -87.681824],
+  ["BlazePizza", 42.049614, -87.681795],
+  ["Panera", 42.048555, -87.681854],
+  ["OliveMeditarraneanGrill", 42.049461, -87.681816],
+  ["AndysFrozenCustard", 42.048445, -87.681425],
   //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
 
 function postTomateItems(items) {
   var developmentLocationId = "5bb9594d290593692fc1472f";
   var productionLocationId = "5bd8e5c9379744001512b107";
+  var locationId = "";
+  if(production) {
+    locationId = productionLocationId;
+  } else {
+    locationId = developmentLocationId;
+  }
 
   for (i=0; i<items.length; i++) {
     var item = items[i];
@@ -103,7 +123,7 @@ function postTomateItems(items) {
       { json: {
         name: item[0],
         price: item[2],
-        location: productionLocationId,
+        location: locationId,
         description: item[1],
         }
       },
@@ -116,6 +136,34 @@ function postTomateItems(items) {
   }
 }
 
+function postItems(location, items, prodLocationId, devLocationId) {
+  var locationId = "";
+  if(production) {
+    locationId = prodLocationId;
+  } else {
+    locationId = devLocationId;
+  }
+
+  for (i=0; i<items.length; i++) {
+    var item = items[i];
+    var api = apiURL + "items";
+    request.post(
+      api,
+      { json: {
+        name: item,
+        price: 0,
+        location: locationId,
+        description: "",
+        }
+      },
+      function(error, response, body) {
+        if (error) {
+          console.log("Failed to populate " + location + " item data");
+        }
+      }
+    );
+  }
+}
 function postTechExpressItems() {
   var productionLocationId = "5bee0ab702d1dd0015c27ab3";
   var developmentLocationId = "5bee0a7bd563f60cfa8c3bdb";
@@ -165,6 +213,8 @@ function postLocations(locations) {
 
 // ********** CALLS ************************
 
-postTomateItems(tomateItems);
-postTechExpressItems();
-// postLocations(locations);
+// function postItems(location, items, prodLocationId, devLocationId) {
+postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
+postItems("TechExpress", techExpressItems, 0, "5c3ceffdc5f3184d02fec0bd");
+postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
+//postLocations(locations);
