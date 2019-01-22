@@ -34,6 +34,7 @@ var LocationController = require('./controllers/LocationController');
 var LoggingController = require('./controllers/LoggingController');
 var FeedbackController = require('./controllers/FeedbackController');
 var MeetingPointController = require('./controllers/MeetingPointController');
+var LocationUpdateController = require('./controllers/LocationUpdateController');
 
 // Set route for push notification
 var PushController = require('./controllers/push');
@@ -45,6 +46,7 @@ app.use('/locations', LocationController);
 app.use('/logging', LoggingController);
 app.use('/feedback', FeedbackController);
 app.use('/meeting', MeetingPointController);
+app.use('/locupdates', LocationUpdateController);
 
 app.listen(PORT);
 console.log('Application listening on PORT: ' + PORT);
