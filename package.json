@@ -7,7 +7,7 @@
     "test": "mocha --timeout 10000 -R spec",
     "dev": "NODE_ENV=dev node index.js",
     "populatedata": "node scripts/populate_data.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=dev node index.js"
   },
   "author": "",
   "license": "ISC",
