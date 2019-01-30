@@ -1,10 +1,11 @@
 var request = require("request");
 
 var production = false;
+var local = false;
 
 var devURL = "http://localhost:8080/";
 var prodURL = "https://otg-delivery.herokuapp.com/";
-var apiURL = production? prodURL : devURL;
+var apiURL = local ? devURL: prodURL;
 
 var tomateItems = [
   ["Chicken Tinga Burrito", "Chicken sauteed with cabbage, onion, and chipotle sauce.", 6.50],
@@ -38,6 +39,19 @@ var tomateItems = [
 
 ]
 
+var starbucksItems = [
+  "Latte",
+  "Coffee",
+  "Iced Coffee",
+  "Cold Brew",
+  "Frappucino",
+  "Cappucino",
+  "Mocha",
+]
+var paneraItems = [
+  "Modern Caprese Sandwich",
+  "Roasted Turkey, Apple, Cheddar Sandwich",
+]
 var coffeeLabItems = [
   "Scone",
   "Cappucino",
@@ -214,7 +228,9 @@ function postLocations(locations) {
 // ********** CALLS ************************
 
 // function postItems(location, items, prodLocationId, devLocationId) {
-postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
-postItems("TechExpress", techExpressItems, 0, "5c3ceffdc5f3184d02fec0bd");
-postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
+// postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
+// postItems("TechExpress", techExpressItems, 0, "5c3ceffdc5f3184d02fec0bd");
+// postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
+//postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
+postItems("Panera", paneraItems, 0, "5c3ceffdc5f3184d02fec0bf");
 //postLocations(locations);
