@@ -160,5 +160,12 @@ router.route('/:userId/removeHelper/:requestId')
       })
   })
 
+router.route('/sendNotification')
+  .post(function(req, res){
+    console.log("POST: /users/sendNotification");
+
+    PushController.sendPushWithMessage(req.body.deviceId, req.body.message);
+    res.send("Sent notification to Device Id " + req.body.deviceId);
+    })
 
 module.exports = router;
