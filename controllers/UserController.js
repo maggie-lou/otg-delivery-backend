@@ -75,7 +75,7 @@ router.route('/:id/tasks')
   .get(function(req, res) {
     console.log("GET: /users/" + req.params.id +"/tasks");
 
-    Request.find({ helper: req.params.id, status: 'Accepted'})
+    Request.find({ helper: req.params.id, status: {$ne: "Completed"} })
       .populate('orderDescription')
       .populate('requester')
       .exec(function(err, requests) {
@@ -103,7 +103,7 @@ router.route('/:userId/accept/:requestId')
           res.status(405);
           res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
           return;
-        } else if (request.status == 'Accepted') {
+        } else if (request.status != 'Pending') {
           res.status(405);
           res.send("Request " + req.params.requestId + " has already been accepted. Cannot be re-accepted.");
           return;
