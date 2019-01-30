@@ -47,7 +47,17 @@ router.route('/:id/requests')
   .get(function(req, res) {
     console.log("GET: /users/" + req.params.id +"/requests");
 
-    Request.find({ requester: req.params.id, status: { $ne: 'Completed' }, 'endTime': {$gte: Date.now()}})
+    // Open and expired
+    // OR Non-Pending, non-completed
+    Request.find({
+      $and: [{
+        requester: req.params.id,
+      },
+        {$or: [{
+          status: 'Pending', 'endTime': {$gte: Date.now()}
+        }, {
+          status: {$nin: ["Pending", "Completed"]}
+        }]}]})
       .populate('orderDescription')
       .populate('requester')
       .exec(function(err, requests) {
