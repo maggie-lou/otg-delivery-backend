@@ -21,7 +21,7 @@ router.route('/')
         request.status = req.body.status;
         request.deliveryLocation = req.body.deliveryLocation;
         request.deliveryLocationDetails = req.body.deliveryLocationDetails;
-      request.pickupLocation = req.body.pickupLocation;
+        request.pickupLocation = req.body.pickupLocation;
 
         PushController.sendPushToMyself("Request submitted. Expires " + req.body.endTime);
 
@@ -120,20 +120,28 @@ router.route('/:id')
 // Route that changes the status of a given request
 router.route('/:id/status')
     .patch(function(req, res) {
-        console.log("PATCH: Change request status for " + req.params.id);
+      console.log("PATCH: Change request status for " + req.params.id + "to status " + req.body.status);
 
-        Request.findOneAndUpdate( { _id: req.params.id}, {$set: { status: req.body.status}}, {"new": true}, function (err, newRequest) {
+      Request.findById(req.params.id)
+        .exec( (err, request) => {
           if(err) {
             console.log("Error updating request.");
             res.send(err);
+            return;
           } else {
+            request.status = req.body.status;
+            request.save( (e) => {
+              if(e) {
+                res.status(400);
+                res.send(`Could not update status for request ${req.params.id} to ${req.body.status}`);
+                return;
+              }
+            });
             console.log("Request status for ID " + req.params.id + " updated");
-            res.status(200);
             res.send("Request status for ID " + req.params.id + " updated");
           }
         });
-
-    })
+    });
 
 
 router.route('/task/:userId')

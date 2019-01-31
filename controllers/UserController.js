@@ -109,16 +109,6 @@ router.route('/:userId/accept/:requestId')
           return;
         }
 
-        request.status = 'Accepted';
-        request.helper = req.params.userId;
-        request.deliveryLocation = req.body.meetingPoint;
-
-        request.save( (err) => {
-          if (err) {
-            res.status(400);
-            res.send("Could not accept request " + requestId + ". Its status remains pending.");
-            return;
-          }
 
           User.findById(req.params.userId, (err, helper) => {
             if (err) {
@@ -126,9 +116,18 @@ router.route('/:userId/accept/:requestId')
               res.send("Could not find helper " + req.params.userId + ", so request " + req.params.requestId + " could not be accepted. Its status remains pending.");
               return;
             }
+            request.status = 'Accepted by ' + helper.username;
+            request.helper = req.params.userId;
+            request.deliveryLocation = req.body.meetingPoint;
 
-            var pushNotificationMessage = `${ helper.username } accepted your request! Please meet them at ${req.body.meetingPoint} when they text you!`;
-            PushController.sendPushWithMessage( [request.requester.deviceId], pushNotificationMessage);
+            request.save( (err) => {
+              if (err) {
+                res.status(400);
+                res.send("Could not accept request " + requestId + ". Its status remains pending.");
+                return;
+              }
+              var pushNotificationMessage = `${ helper.username } accepted your request! Please meet them at ${req.body.meetingPoint} when they text you!`;
+              PushController.sendPushWithMessage( [request.requester.deviceId], pushNotificationMessage);
 
             PushController.sendPushToMyself(`${helper.username} accepted a task submitted by ${request.requester.username}!`);
             res.send("Accepted request with ID " + req.params.requestId + " by " + req.params.userId);
