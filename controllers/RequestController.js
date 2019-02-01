@@ -145,13 +145,15 @@ router.route('/:id/status')
 
 
 router.route('/task/:userId')
-  .get(function(req, res) {
+  .post(function(req, res) {
     console.log("GET: requests/task/" + req.params.userId);
 
+    var eligiblePickupLocations = eval(req.body.eligiblePickupLocations); // Convert JSON to array
     Request.find({
       status: 'Pending',
       endTime: {$gte: Date.now()},
-      requester: { $ne: req.params.userId }
+      requester: { $ne: req.params.userId },
+      pickupLocation: { $in: eligiblePickupLocations },
     })
       .sort('orderTime')
       .populate('orderDescription')
