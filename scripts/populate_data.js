@@ -1,6 +1,6 @@
 var request = require("request");
 
-var production = false;
+var production = true;
 var local = false;
 
 var devURL = "http://localhost:8080/";
@@ -229,8 +229,8 @@ function postLocations(locations) {
 
 // function postItems(location, items, prodLocationId, devLocationId) {
 // postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
-// postItems("TechExpress", techExpressItems, 0, "5c3ceffdc5f3184d02fec0bd");
+postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
 // postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
 //postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
-postItems("Panera", paneraItems, 0, "5c3ceffdc5f3184d02fec0bf");
-//postLocations(locations);
+postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
+// postLocations(locations);

@@ -119,7 +119,7 @@ exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
 
 exports.sendPushToMyself = (message) => {
   console.log("In send push to myself");
-  var myDeviceId = "866775D034B60C61E5A1FAF20E54978025525EDB485C7FFB8F38C9ED102AEFDB";
+  var myDeviceId = "1549238CDD7A8E2484691CC09AB204EA8EFF6F1CC6BC934D087AAFDEAB5BE435";
 
   exports.sendPushWithMessage([myDeviceId], message);
 };
