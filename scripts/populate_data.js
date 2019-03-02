@@ -40,59 +40,138 @@ var tomateItems = [
 ]
 
 var starbucksItems = [
-  "Latte",
-  "Coffee",
-  "Iced Coffee",
-  "Cold Brew",
-  "Frappucino",
-  "Cappucino",
-  "Mocha",
+  ["Latte", "Size: Tall", 2.95],
+  ["Mocha", "Size: Tall", 3.45],
+  ["Freshly Brewed Coffee", "Size: Tall", 1.85],
+  ["Vanilla Latte", "Size: Tall", 3.45],
+  ["Caramel Macchiato", "Size: Tall", 3.75],
+  ["Chai Latte", "Size: Tall", 3.65],
+  ["Peppermint Mocha", "Size: Tall", 3.95],
+  ["Iced Coffee", "Size: Tall", 2.25],
+  ["Caramel Frappuccino", "Size: Tall", 3.95],
+  ["Mocha Frappuccino", "Size: Tall", 3.95],
+  ["Strawberries and Creme Frappuccino", "Size: Tall", 3.95],
+  ["Coffee Frappuccino", "Size: Tall", 3.95],
+  ["Vanilla Bean Frappuccino", "Size: Tall", 3.95],
+  ["Iced Caramel Macchiato", "Size: Tall", 3.75],
+  ["Cool Lime Refresher", "Size: Tall", 2.95],
+  ["Peach Green Tea Lemonade", "Size: Tall", 2.75],
+  ["Chocolate Croissant", "", 2.75],
+  ["Butter Croissant", "", 2.45],
 ]
+
 var paneraItems = [
-  "Modern Caprese Sandwich",
-  "Roasted Turkey, Apple, Cheddar Sandwich",
+  ["Cuban Sandwich", "", 9.99],
+  ["Bacon Tomato Grilled Cheese", "", 9.29],
+  ["Roasted Turkey, Apple, Cheddar Sandwich", "", 9.99],
+  ["Steak and White Cheddar Panini", "", 10.49],
+  ["Roasted Tomate and Avocado BLT", "", 10.49],
+  ["Caprese Sandwich", "", 9.99],
+  ["Four Cheese Grilled Cheese", "", 7.39],
+  ["Ham and Swiss Sandwich", "", 7.39],
+  ["Turkey Sandwich", "", 7.39],
+  ["Mediterranean Veggie Sandiwch", "", 7.39],
+  ["Mac and Cheese", "", 8.49],
+  ["Chicken Noodle Soup", "", 5.99],
+  ["Broccoli Cheddar Soup", "", 5.99],
+  ["Clam Chowder", "", 5.99],
+  ["French Onion Soup", "", 5.99],
+  ["Bagel", "Specify type in Special Requests section on next page.", 1.39],
+  ["Chocolate Chip Cookie", "", 2.49],
+  ["M&M Cookie", "", 2.49],
+  ["Brownie", "", 2.99],
+  ["Chocolate Croissant", "", 2.99],
+  ["Blueberry Muffin", "", 2.79],
+  ["Pumpkin Muffie", "", 1.89],
+  ["Chocolate Chip Muffie", "", 1.89],
+  ["Cinammon Scone", "", 2.99],
 ]
 var coffeeLabItems = [
-  "Scone",
-  "Cappucino",
-  "Mocha",
+  ["Espresso", "", 2.95],
+  ["Americano", "", 2.95],
+  ["Macchiato", "", 2.95],
+  ["Cortado", "", 2.95],
+  ["Cappuccino", "", 2.95],
+  ["Latte", "", 2.95],
+  ["Mocha", "", 3.45],
+  ["Freshly Brewed Coffee", "", 1.85],
+  ["Dirty Chai Latte", "", 3.65],
+  ["Hot Cocoa", "", 3.95],
+  ["Iced Coffee", "", 2.25],
+  ["Iced Latte", "", 3.95],
+  ["Iced Mocha", "", 3.95],
+  ["Iced White Mocha", "", 3.95],
+  ["Iced Chai", "", 3.95],
+  ["Fresh Scone", "Flavors based on day.", 2.75],
+  ["Chocolate Chip Cookie", "", 2.45],
 ]
+
+var omgItems = [
+  ["Falafel Plate", "Specify sides and sauces in Special Requests section on next page.", 9.99],
+  ["Mediterranean Chicken Plate", "Specify sides and sauces in Special Requests section on next page.", 9.99],
+  ["Chicken Kabob Plate", "Specify sides and sauces in Special Requests section on next page.", 9.99],
+  ["Chicken Shawarma Plate", "Specify sides and sauces in Special Requests section on next page.", 9.99],
+  ["Steak Shawarma Plate", "Specify sides and sauces in Special Requests section on next page.", 10.99],
+  ["Falafel Sandwich", "With hummus, mediterranean salad, and potatoes.", 7.99],
+  ["Mediterranean Chicken Sandwich", "With garlic spread and red onions.", 7.99],
+  ["Chicken Kabob Sandwich", "With garlic spread and red onions.", 7.99],
+  ["Chicken Shawarma Sandwich", "With garlic spread, pickles, and roma tomatoes.", 7.99],
+  ["Steak Shawarma Sandwich", "With garlic spread, red onions, and roma tomatoes.", 8.98],
+  ["Baklava", "", 1.49],
+]
+
+var andysItems = [
+  ["Custom Concrete", "Vanilla frozen custard blended with the topping of your choice. Specify toppings in Special Requests section on next page.", 3.99],
+  ["James Brownie Funky Jackhammer", "Vanilla frozen custard blended with creamy peanut butter and brownies then filled with hot fudge.", 5.54],
+  ["Triple Chocolate Concrete", "Chocolate frozen custard blended with chocolate chip cookie dough and melted chocolate chip.", 4.74],
+  ["Snowmonster Concrete", "Vanilla frozen custard blended with strawberries and melted chocolate chip.", 4.74],
+  ["Shake", "Vanilla frozen custard blended with your favorite topping. Specify toppings in Special Requests section on next page.", 4.09],
+  ["Custom Sundae", "Vanilla frozen custard topped with your favorite topping. Specify toppings in Special Requests section on next page.", 4.09],
+  ["Butter Pecan Concrete", "Vanilla frozen custard blended with butterscotch and roasted pecans.", 4.99],
+]
+
+var blazeItems = [
+  ["Build Your Own Pizza", "Specify toppings in Special Requests section on next page.", 8.45],
+  ["1 Topping Pizza", "Specify toppings in Special Requests section on next page.", 6.75],
+  ["Simple Pie Pizza", "Specify toppings in Special Requests section on next page.", 5.55],
+]
+
 var techExpressItems = [
-  "Quaker Oatmeal",
-  "Kind Bar",
-  "Sea Salt and Vinegar Chips",
-  "Jalapeno Chips",
-  "Barbeque Chips",
-  "Chedar Ruffles",
-  "Cheez It",
-  "M&Ms",
-  "Snickers Bar",
-  "Hershey Bar",
-  "Twix Bar",
-  "Fresh Fruit",
-  "Orbit Gum",
-  "Coke",
-  "Cherry Coke",
-  "Diet Coke",
-  "Sprite",
-  "Orange Fanta",
-  "Bottled Water",
-  "Coconut Water",
-  "Vitamin Water",
-  "Powerade",
-  "Minute Maid Lemonade",
-  "Monster",
-  "Dunkin Donuts Iced Coffee",
-  "Muffin",
-  "Donut",
-  "Croissant",
-  "Hot Coffee",
+  ["Quaker Oatmeal", "", 0],
+  ["Kind Bar", "", 0],
+  ["Sea Salt and Vinegar Chips", "", 0],
+  ["Jalapeno Chips", "", 0],
+  ["Barbeque Chips", "", 0],
+  ["Chedar Ruffles", "", 0],
+  ["Cheez It", "", 0],
+  ["M&Ms", "", 0],
+  ["Snickers Bar", "", 0],
+  ["Hershey Bar", "", 0],
+  ["Twix Bar", "", 0],
+  ["Fresh Fruit", "", 0],
+  ["Orbit Gum", "", 0],
+  ["Coke", "", 0],
+  ["Cherry Coke", "", 0],
+  ["Diet Coke", "", 0],
+  ["Sprite", "", 0],
+  ["Orange Fanta", "", 0],
+  ["Bottled Water", "", 0],
+  ["Coconut Water", "", 0],
+  ["Vitamin Water", "", 0],
+  ["Powerade", "", 0],
+  ["Minute Maid Lemonade", "", 0],
+  ["Monster", "", 0],
+  ["Dunkin Donuts Iced Coffee", "", 0],
+  ["Muffin", "", 0],
+  ["Donut", "", 0],
+  ["Croissant", "", 0],
+  ["Hot Coffee", "", 0],
   // "Sushi - Veggie",
   // "Sushi - California Roll",
   // "Sushi - Tempura",
   // "Sandwich - Ham/Turkey and Cheese",
   // "Chicken Caesar Salad",
-  "Hummus and Pita",
+  ["Hummus and Pita", "", 0],
   // "Caprese Salad",
   // "Garden Salad",
   // "Pulled Pork Arepas",
@@ -100,9 +179,9 @@ var techExpressItems = [
   // "Braised Chicken Arepas",
   // "Black Beans and Queso Arepas",
   // "Roasted Corn, Carrot, and Cauliflower Arepas",
-  "Chips and Salsa",
-  "Rice and Beans",
-  "Sweet Plantains",
+  // "Chips and Salsa",
+  // "Rice and Beans",
+  // "Sweet Plantains",
   // "Cheese Empanada (1)",
   // "Veggie Empanada (1)",
 ]
@@ -164,10 +243,10 @@ function postItems(location, items, prodLocationId, devLocationId) {
     request.post(
       api,
       { json: {
-        name: item,
-        price: 0,
+        name: item[0],
+        price: item[2],
         location: locationId,
-        description: "",
+        description: item[1],
         }
       },
       function(error, response, body) {
@@ -228,9 +307,12 @@ function postLocations(locations) {
 // ********** CALLS ************************
 
 // function postItems(location, items, prodLocationId, devLocationId) {
-// postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
+postItems("Tomate", tomateItems, "5c54a1f33332080016095016", "5c3ceffdc5f3184d02fec0bc");
 postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
-// postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
-//postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
-postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
+postItems("CoffeeLab", coffeeLabItems, "5c54a1f33332080016095015", "5c3ceffdc5f3184d02fec0c0");
+postItems("Starbucks", starbucksItems, "5c54a1f33332080016095018", "5c3ceffdc5f3184d02fec0be");
+postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3u84d02fec0bf");
+postItems("OliveMeditarraneanGrill", omgItems, "5c54a1f33332080016095017", 0);
+postItems("Andys", andysItems, "5c54a1f33332080016095019", 0);
+postItems("Blaze", blazeItems, "5c54a1f3333208001609501a", 0);
 // postLocations(locations);

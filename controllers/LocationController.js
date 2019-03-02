@@ -18,7 +18,7 @@ router.route('/')
         return;
       }
 
-      console.log(locationDocument);
+      // console.log(locationDocument); // Note: Very noisy
       res.send(locationDocument);
     })
   })
