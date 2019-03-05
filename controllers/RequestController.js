@@ -15,21 +15,21 @@ router.route('/')
 
         var request = new Request();
         request.requester = req.body.requester;
-        request.helper = req.body.helper;
-        request.orderDescription = req.body.orderDescription;
-        request.endTime = req.body.endTime;
+        request.orderStartTime = req.body.orderStartTime;
+        request.orderEndTime = req.body.orderEndTime;
         request.status = req.body.status;
-        request.deliveryLocation = req.body.deliveryLocation;
-        request.deliveryLocationDetails = req.body.deliveryLocationDetails;
-        request.pickupLocation = req.body.pickupLocation;
+        request.deliveryLocationOptions = req.body.deliveryLocationOptions;
+        request.timeProbabilityCondition = req.body.timeProbabilityCondition;
+        request.timeProbabilities = req.body.timeProbabilities;
 
-        PushController.sendPushToMyself("Request submitted. Expires " + req.body.endTime);
+        PushController.sendPushToMyself("Request submitted. Start time " + req.body.orderStartTime + ". Condition: " + req.body.timeProbabilityCondition);
 
         //save request
         request.save(function(err){
             //return the error in response if it exists
             if (err){
                 console.log("Error creating new request");
+                console.log(err);
                 res.send(err);
                 return;
             }
