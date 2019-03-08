@@ -15,6 +15,7 @@ router.route('/accept/:requestId')
           res.status(500);
           res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
           return;
+        }
         // } else if (Date.now() > request.endTime) {
         //   res.status(405);
         //   res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
@@ -30,6 +31,7 @@ router.route('/accept/:requestId')
 
         request.save( (err) => {
           if (err) {
+            console.log(err);
             res.status(400);
             res.send("Could not accept request " + requestId + ". Its status remains pending.");
             return;
@@ -39,7 +41,8 @@ router.route('/accept/:requestId')
 
           res.send("Accepted request with ID " + req.params.requestId );
         });
-      });
+
+      })
 
   })
 
