@@ -1,6 +1,6 @@
 var request = require("request");
 
-var production = false;
+var production = true;
 var local = false;
 
 var devURL = "http://localhost:8080/";
