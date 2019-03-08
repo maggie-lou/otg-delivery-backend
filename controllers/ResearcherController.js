@@ -1,5 +1,6 @@
 var express = require('express');
 var PushController = require('./push');
+var Request = require('../models/request');
 const router = express.Router();
 
 
@@ -10,6 +11,7 @@ router.route('/accept/:requestId')
       .populate('requester')
       .exec( (err, request) => {
         if (err) {
+          console.log(err);
           res.status(500);
           res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
           return;
