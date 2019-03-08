@@ -1,11 +1,17 @@
 var request = require("request");
 
-var production = true;
+var production = false;
 var local = false;
 
 var devURL = "http://localhost:8080/";
 var prodURL = "https://otg-delivery.herokuapp.com/";
 var apiURL = local ? devURL: prodURL;
+
+var studyItems = [
+  ["Chocolate Chip Granola Bar", "", 0],
+  ["Snickers Chocolate Bar", "", 0],
+  ["Apple", "", 0],
+]
 
 var tomateItems = [
   ["Chicken Tinga Burrito", "Chicken sauteed with cabbage, onion, and chipotle sauce.", 6.50],
@@ -108,14 +114,15 @@ var techExpressItems = [
 ]
 
 var locations = [
-  ["Tomate", 42.058345, -87.683724],
-  ["TechExpress", 42.057816, -87.677123], // On Sheridan
-  ["CoffeeLab", 42.058455, -87.683737],
-  ["Starbucks",42.049677, -87.681824],
-  ["BlazePizza", 42.049614, -87.681795],
-  ["Panera", 42.048555, -87.681854],
-  ["OliveMeditarraneanGrill", 42.049461, -87.681816],
-  ["AndysFrozenCustard", 42.048445, -87.681425],
+  ["Study", 0, 0],
+  // ["Tomate", 42.058345, -87.683724],
+  // ["TechExpress", 42.057816, -87.677123], // On Sheridan
+  // ["CoffeeLab", 42.058455, -87.683737],
+  // ["Starbucks",42.049677, -87.681824],
+  // ["BlazePizza", 42.049614, -87.681795],
+  // ["Panera", 42.048555, -87.681854],
+  // ["OliveMeditarraneanGrill", 42.049461, -87.681816],
+  // ["AndysFrozenCustard", 42.048445, -87.681425],
   //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
 
@@ -229,8 +236,9 @@ function postLocations(locations) {
 
 // function postItems(location, items, prodLocationId, devLocationId) {
 // postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
-postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
+//postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
 // postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
 //postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
-postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
-// postLocations(locations);
+//postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
+//postItems("Study", studyItems, "", "5c82b653764eef7a920fc0d8");
+postLocations(locations);

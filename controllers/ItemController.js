@@ -16,6 +16,7 @@ router.route('/')
 
     item.save(function(err, itemDocument){
       if(err){
+        console.log(err);
         res.send(err);
         return;
       }
