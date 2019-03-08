@@ -15,15 +15,15 @@ router.route('/accept/:requestId')
           res.status(500);
           res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
           return;
-        } else if (Date.now() > request.endTime) {
-          res.status(405);
-          res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
-          return;
-        } else if (request.status != 'Pending') {
-          res.status(405);
-          res.send("Request " + req.params.requestId + " has already been accepted. Cannot be re-accepted.");
-          return;
-        }
+        // } else if (Date.now() > request.endTime) {
+        //   res.status(405);
+        //   res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
+        //   return;
+        // } else if (request.status != 'Pending') {
+        //   res.status(405);
+        //   res.send("Request " + req.params.requestId + " has already been accepted. Cannot be re-accepted.");
+        //   return;
+        // }
 
         request.status = `Accepted by Helper (~15min to Meeting)`;
         request.deliveryLocation = req.body.meetingPoint;
