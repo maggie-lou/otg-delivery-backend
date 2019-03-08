@@ -8,9 +8,9 @@ var prodURL = "https://otg-delivery.herokuapp.com/";
 var apiURL = local ? devURL: prodURL;
 
 var studyItems = [
-  ["Chocolate Chip Granola Bar", "", 0],
-  ["Snickers Chocolate Bar", "", 0],
-  ["Apple", "", 0],
+  "Chocolate Chip Granola Bar",
+  "Snickers Chocolate Bar",
+  "Apple",
 ]
 
 var tomateItems = [
@@ -240,5 +240,5 @@ function postLocations(locations) {
 // postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
 //postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
 //postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
-//postItems("Study", studyItems, "", "5c82b653764eef7a920fc0d8");
+postItems("Study", studyItems, "5c82c2e701bfde0016c91f8c", "5c82b653764eef7a920fc0d8");
 postLocations(locations);
