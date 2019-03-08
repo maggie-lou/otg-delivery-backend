@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/accept/:requestId')
   .post(function(req, res) {
-    console.log("POST: /researcher/" + "/accept/" + req.params.requestId);
+    console.log("POST: /researcher/accept/" + req.params.requestId);
     Request.findById(req.params.requestId)
       .populate('requester')
       .exec( (err, request) => {
@@ -16,6 +16,7 @@ router.route('/accept/:requestId')
           res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
           return;
         }
+        console.log(request);
         // } else if (Date.now() > request.endTime) {
         //   res.status(405);
         //   res.send("Request " + req.params.requestId + " has already expired. Cannot be accepted.");
