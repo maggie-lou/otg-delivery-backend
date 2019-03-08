@@ -7,7 +7,7 @@
     "test": "mocha --timeout 10000 -R spec",
     "dev": "NODE_ENV=dev node index.js",
     "populatedata": "node scripts/populate_data.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=dev node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "body-parser": "^1.15.1",
     "config": "^1.20.1",
     "express": "^4.16.2",
+    "moment": "^2.24.0",
     "mongodb": "^3.0.3",
     "mongoose": "^5.0.7",
     "sinon": "^6.1.5"

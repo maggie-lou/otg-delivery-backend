@@ -3,14 +3,17 @@ var Schema = mongoose.Schema;
 
 var RequestSchema = new Schema({
   requester: {type: Schema.Types.ObjectId, ref: 'User'},
-  helper: {type: Schema.Types.ObjectId, ref: 'User'},
-	orderDescription: {type: Schema.Types.ObjectId, ref: 'Item'},
-	orderTime: {type: Date, default: Date.now},
-	endTime: Date,
+	orderStartTime: {type: Date, default: Date.now},
+	orderEndTime: {type: Date, default: Date.now},
+  item: String,
 	status: String,
+  deliveryLocationOptions: String,
   deliveryLocation: String,
-  deliveryLocationDetails: String,
-  pickupLocation:String,
+  diffHelperRequesterArrivalTime: Number,
+  helperTextTime: Date,
+  requesterTextRespondTime: Date,
+  timeProbabilities: String,
+  planningNotes: String,
 });
 
 module.exports = mongoose.model('Request', RequestSchema);

@@ -1,5 +1,6 @@
 //Push notifications
 var PushController = require('./push');
+var Parse = require('./parsing');
 var express = require('express');
 
 var Request = require('../models/request');
@@ -15,24 +16,25 @@ router.route('/')
 
         var request = new Request();
         request.requester = req.body.requester;
-        request.helper = req.body.helper;
-        request.orderDescription = req.body.orderDescription;
-        request.endTime = req.body.endTime;
+        request.orderStartTime = req.body.orderStartTime;
+        request.orderEndTime = req.body.orderEndTime;
+        request.item = req.body.item;
         request.status = req.body.status;
-        request.deliveryLocation = req.body.deliveryLocation;
-        request.deliveryLocationDetails = req.body.deliveryLocationDetails;
-        request.pickupLocation = req.body.pickupLocation;
-
-        PushController.sendPushToMyself("Request submitted. Expires " + req.body.endTime);
+        request.deliveryLocationOptions = req.body.deliveryLocationOptions;
+        request.timeProbabilities = req.body.timeProbabilities;
 
         //save request
-        request.save(function(err){
+        request.save(function(err, savedReq){
             //return the error in response if it exists
             if (err){
                 console.log("Error creating new request");
+                console.log(err);
                 res.send(err);
                 return;
             }
+
+            PushController.sendPushToMyself("Request submitted. Start time: " + Parse.parseDateToTime(req.body.orderStartTime) + ". End time: " + Parse.parseDateToTime(req.body.orderEndTime) + "Item: " + req.body.item + " Meeting points: " + req.body.deliveryLocationOptions + " Request ID: " + savedReq.id);
+
             res.json({message: 'Request created!'});
         });
     })
