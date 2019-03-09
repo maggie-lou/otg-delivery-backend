@@ -20,6 +20,7 @@ router.route('/')
         request.orderEndTime = req.body.orderEndTime;
         request.item = req.body.item;
         request.status = req.body.status;
+        request.deliveryLocation = req.body.deliveryLocation;
         request.deliveryLocationOptions = req.body.deliveryLocationOptions;
         request.timeProbabilities = req.body.timeProbabilities;
 
