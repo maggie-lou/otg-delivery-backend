@@ -1,11 +1,18 @@
 var request = require("request");
 
 var production = true;
-var local = false;
+var local = true;
 
 var devURL = "http://localhost:8080/";
 var prodURL = "https://otg-delivery.herokuapp.com/";
 var apiURL = local ? devURL: prodURL;
+
+var meetingPoints = [
+  "Tech Lobby",
+  "Bridge between Tech and Mudd",
+  "SPAC Entrance",
+  "Ford Lobby"
+]
 
 var studyItems = [
   "Chocolate Chip Granola Bar",
@@ -205,36 +212,6 @@ var locations = [
   //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
 
-function postTomateItems(items) {
-  var developmentLocationId = "5bb9594d290593692fc1472f";
-  var productionLocationId = "5bd8e5c9379744001512b107";
-  var locationId = "";
-  if(production) {
-    locationId = productionLocationId;
-  } else {
-    locationId = developmentLocationId;
-  }
-
-  for (i=0; i<items.length; i++) {
-    var item = items[i];
-    var api = apiURL + "items";
-    request.post(
-      api,
-      { json: {
-        name: item[0],
-        price: item[2],
-        location: locationId,
-        description: item[1],
-        }
-      },
-      function(error, response, body) {
-        if (error) {
-          console.log("Failed to populate Tomate item data");
-        }
-      }
-    );
-  }
-}
 
 function postItems(location, items, prodLocationId, devLocationId) {
   var locationId = "";
@@ -264,30 +241,6 @@ function postItems(location, items, prodLocationId, devLocationId) {
     );
   }
 }
-function postTechExpressItems() {
-  var productionLocationId = "5bee0ab702d1dd0015c27ab3";
-  var developmentLocationId = "5bee0a7bd563f60cfa8c3bdb";
-
-  for (i=0; i<techExpressItems.length; i++) {
-    var item = techExpressItems[i];
-    var api = apiURL + "items";
-    request.post(
-      api,
-      { json: {
-        name: item,
-        price: 0,
-        location: productionLocationId,
-        description: "",
-        }
-      },
-      function(error, response, body) {
-        if (error) {
-          console.log("Failed to populate Tech Express item data");
-        }
-      }
-    );
-  }
-}
 
 function postLocations(locations) {
   for (i=0; i<locations.length; i++) {
@@ -310,6 +263,26 @@ function postLocations(locations) {
   }
 }
 
+function postMeetingPoints(MeetingPoints) {
+  for (i=0; i<MeetingPoints.length; i++) {
+    var meeting = MeetingPoints[i];
+    var api = apiURL + "meeting";
+    request.post(
+      api,
+      { json: {
+        name: meeting,
+        latitude: 0,
+        longitude: 0,
+        }
+      },
+      function(error, response, body) {
+        if (error) {
+          console.log("Failed to populate location data");
+        }
+      }
+    );
+  }
+}
 
 // ********** CALLS ************************
 
@@ -319,5 +292,6 @@ function postLocations(locations) {
 // postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
 //postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
 //postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
-postItems("Study", studyItems, "5c82c2e701bfde0016c91f8c", "5c82b653764eef7a920fc0d8");
-postLocations(locations);
+//postItems("Study", studyItems, "5c82c2e701bfde0016c91f8c", "5c82b653764eef7a920fc0d8");
+//postLocations(locations);
+postMeetingPoints(meetingPoints);
