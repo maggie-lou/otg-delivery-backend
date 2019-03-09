@@ -84,12 +84,14 @@ router.route('/:id')
 
         Request.remove({ _id: requestId}, function(err){
           if (err) {
-            console.log("ERROR: could not delete given resource.")
+            console.log(err);
+            res.send(err);
             return;
           }
-        });
+          PushController.sendPushToMyself("Request " + requestId + " deleted");
 
-        res.json({message: 'Request deleted!'});
+          res.json({message: 'Request deleted!'});
+        });
     })
 
   .patch(function(req, res) {
