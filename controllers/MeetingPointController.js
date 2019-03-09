@@ -12,6 +12,7 @@ router.route('/')
           console.log(err);
           res.send(err);
         }
+        console.log(dbRequests);
         res.send(dbRequests);
       })
   })
