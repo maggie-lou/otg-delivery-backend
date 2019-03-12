@@ -56,7 +56,7 @@ router.route('/:id/requests')
         {$or: [{
           status: 'Pending', 'endTime': {$gte: Date.now()}
         }, {
-          status: {$nin: ["Pending", "Completed"]}
+          status: {$nin: ["Pending", "Completed", "Not Completed"]}
         }]}]})
       .populate('orderDescription')
       .populate('requester')
