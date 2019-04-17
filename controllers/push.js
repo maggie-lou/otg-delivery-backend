@@ -5,7 +5,7 @@ const apn = require('apn');
  */
 // Looking for development or production environment
 //const nodeEnv = process.env.NODE_ENV || '';
-const nodeEnv = 'enterprise'
+const nodeEnv = 'development'
 
 let options = {},
   topic = '';
@@ -60,7 +60,7 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
   note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
   note.badge = 0;
   note.sound = 'ping.aiff';
-  note.alert = message;
+  note.alert = message; 
   note.payload = {
     'messageFrom': 'OTG-server'
   };
@@ -72,6 +72,9 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
       console.log(note);
       console.log("Success");
       response.success(result);
+    } else {
+      console.log("Response is undefined");
+      console.log(result);
     }
   }).catch(error => {
     if (response !== undefined) {
@@ -115,11 +118,12 @@ exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
   apnConnection.shutdown();
 };
 
-
-
 exports.sendPushToMyself = (message) => {
-//  console.log("In send push to myself");
-  var myDeviceId = "BD399029ADC7EC6BF7FB50E7C490C9C8A87E62BA4663F0123B9421B4DB51072E";
+  console.log("Sending push to self");
+  //var myDeviceId = "BD399029ADC7EC6BF7FB50E7C490C9C8A87E62BA4663F0123B9421B4DB51072E"; //maggie's device
+  var myDeviceId = "E97831950E45DF46A24011D68721AB3BF7F944C410924AABD90A7AD91AF6380D";
 
   exports.sendPushWithMessage([myDeviceId], message);
 };
+
+

@@ -16,7 +16,7 @@ MongoClient.connect("mongodb://OTGDeveloper:Dev113!@ds153705.mlab.com:53705/otg-
 });
 
 function getNumOpenRequestsPerHour(db) {
-  db.collection('requestsMP').find( {} ).toArray(function(err, requests) {
+  db.collection('requestsMP').find({}).toArray(function(err, requests) {
     if (err) {
       console.log("Error connecting to collection.");
       return;

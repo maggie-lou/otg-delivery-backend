@@ -9,40 +9,40 @@ const router = express.Router();
 
 
 router.route('/')
-    //POST: create a new request
-    .post(function(req, res) {
-        console.log("POST: request for " + req.body.requester);
-        console.log(req.body);
+  //POST: create a new request
+  .post(function(req, res) {
+      console.log("POST: request for " + req.body.requester);
+      console.log(req.body);
 
-        var request = new Request();
-        request.requester = req.body.requester;
-        request.orderStartTime = req.body.orderStartTime;
-        request.orderEndTime = req.body.orderEndTime;
-        request.item = req.body.item;
-        request.status = req.body.status;
-        request.deliveryLocation = req.body.deliveryLocation;
-        request.deliveryLocationOptions = req.body.deliveryLocationOptions;
-        request.timeProbabilities = req.body.timeProbabilities;
+      var request = new Request();
+      request.requester = req.body.requester;
+      request.orderStartTime = req.body.orderStartTime;
+      request.orderEndTime = req.body.orderEndTime;
+      request.item = req.body.item;
+      request.status = req.body.status;
+      request.deliveryLocation = req.body.deliveryLocation;
+      request.deliveryLocationOptions = req.body.deliveryLocationOptions;
+      request.timeProbabilities = req.body.timeProbabilities;
 
-        //save request
-        request.save(function(err, savedReq){
-            //return the error in response if it exists
-            if (err){
-                console.log("Error creating new request");
-                console.log(err);
-                res.send(err);
-                return;
-            }
+      //save request
+      request.save(function(err, savedReq){
+        //return the error in response if it exists
+        if (err){
+            console.log("Error creating new request");
+            console.log(err);
+            res.send(err);
+            return;
+        }
 
-            PushController.sendPushToMyself("Request submitted. Start time: " + Parse.parseDateToTime(req.body.orderStartTime) + ". End time: " + Parse.parseDateToTime(req.body.orderEndTime) + "Item: " + req.body.item + " Meeting points: " + req.body.deliveryLocationOptions + " Request ID: " + savedReq.id);
+        PushController.sendPushToMyself("Request submitted. Start time: " + Parse.parseDateToTime(req.body.orderStartTime) + ". End time: " + Parse.parseDateToTime(req.body.orderEndTime) + "Item: " + req.body.item + " Meeting points: " + req.body.deliveryLocationOptions + " Request ID: " + savedReq.id);
 
-            res.json({message: 'Request created!'});
-        });
+        res.json({message: 'Request created!'});
+      });
     })
 
     .get(function(req, res) {
       console.log("GET: /request");
-const {ObjectId} = require('mongodb');
+      const {ObjectId} = require('mongodb');
       var status = req.query.status || "";
       var excludingRequesterId = req.query.excluding || "000000000000000000000000";
       excludingRequesterId = ObjectId(excludingRequesterId);
@@ -50,7 +50,7 @@ const {ObjectId} = require('mongodb');
       Request.find({
         'endTime': {$gte: Date.now()},
         'status': new RegExp(status),
-        'requester': {$ne: excludingRequesterId},
+        'requester': {$ne: excludingRequesterId}, //not returning requester's requests
       })
         .populate('orderDescription')
         .populate('requester')
@@ -64,35 +64,35 @@ const {ObjectId} = require('mongodb');
     })
 
 router.route('/:id')
-    .get(function(req, res) {
-      console.log("GET: get request with id " + req.params.id);
-      Request.findById(req.params.id)
-        .populate('orderDescription')
-        .populate('requester')
-        .exec(function(err, request) {
-          if (err) {
-            console.log("Error getting request " + req.params.id);
-            res.send(err);
-          }
-          res.send(request)
-        })
+  .get(function(req, res) {
+    console.log("GET: get request with id " + req.params.id);
+    Request.findById(req.params.id)
+      .populate('orderDescription')
+      .populate('requester')
+      .exec(function(err, request) {
+        if (err) {
+          console.log("Error getting request " + req.params.id);
+          res.send(err);
+        }
+        res.send(request)
+      })
     })
 
-    .delete(function(req, res){
-        let requestId = req.params.id;
-        console.log("DELETE: delete request with id " + req.params.id);
+  .delete(function(req, res){
+    let requestId = req.params.id;
+    console.log("DELETE: delete request with id " + req.params.id);
 
-        Request.remove({ _id: requestId}, function(err){
-          if (err) {
-            console.log(err);
-            res.send(err);
-            return;
-          }
-          PushController.sendPushToMyself("Request " + requestId + " deleted");
+    Request.remove({ _id: requestId}, function(err){
+      if (err) {
+        console.log(err);
+        res.send(err);
+        return;
+      }
+      PushController.sendPushToMyself("Request " + requestId + " deleted");
 
-          res.json({message: 'Request deleted!'});
-        });
-    })
+      res.json({message: 'Request deleted!'});
+    });
+  })
 
   .patch(function(req, res) {
     console.log("POST: Update request " + req.params.id);

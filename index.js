@@ -1,7 +1,7 @@
 //web server imports
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser'); //parses JSON
 
 //so the server can handle POST requests
 app.use(bodyParser.urlencoded({extended: true}));
@@ -13,32 +13,28 @@ app.use(function(req, res, next) {
 	next();
 });
 
-var PORT = process.env.PORT || 8080;
-var router = express.Router();
-
-
 // Configure database and data models
 const env = "" + process.env.NODE_ENV;
 console.log("ENV: " + env);
-const config = require('./config/db')[env || "dev"];
+const config = require('./config/db')["dev" || env];
 console.log(config);
 
-var mongoose = require('mongoose');
-mongoose.connect(config.database);
+const mongoose = require('mongoose');
+mongoose.connect(config.database, { useNewUrlParser: true });
 
 // Set routes
-var RequestController = require('./controllers/RequestController');
-var UserController = require('./controllers/UserController');
-var ItemController = require('./controllers/ItemController');
-var LocationController = require('./controllers/LocationController');
-var LoggingController = require('./controllers/LoggingController');
-var FeedbackController = require('./controllers/FeedbackController');
-var MeetingPointController = require('./controllers/MeetingPointController');
-var LocationUpdateController = require('./controllers/LocationUpdateController');
-var ResearcherController = require('./controllers/ResearcherController');
+const RequestController = require('./controllers/RequestController');
+const UserController = require('./controllers/UserController');
+const ItemController = require('./controllers/ItemController');
+const LocationController = require('./controllers/LocationController');
+const LoggingController = require('./controllers/LoggingController');
+const FeedbackController = require('./controllers/FeedbackController');
+const MeetingPointController = require('./controllers/MeetingPointController');
+const LocationUpdateController = require('./controllers/LocationUpdateController');
+const ResearcherController = require('./controllers/ResearcherController');
 
 // Set route for push notification
-var PushController = require('./controllers/push');
+//const PushController = require('./controllers/push');
 
 app.use('/requests', RequestController);
 app.use('/users', UserController);
@@ -50,6 +46,7 @@ app.use('/meeting', MeetingPointController);
 app.use('/locupdates', LocationUpdateController);
 app.use('/researcher', ResearcherController);
 
+const PORT = process.env.PORT || 8080;
 app.listen(PORT);
 console.log('Application listening on PORT: ' + PORT);
 

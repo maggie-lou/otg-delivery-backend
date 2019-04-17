@@ -88,7 +88,7 @@ router.route('/:id/tasks')
       })
   })
 
-
+//accessed when a request is accepted
 router.route('/:userId/accept/:requestId')
   .patch(function(req, res) {
     console.log("PATCH: /users/" + req.params.userId +"/accept/" + req.params.requestId);
@@ -120,7 +120,7 @@ router.route('/:userId/accept/:requestId')
           request.helper = req.params.userId;
           request.deliveryLocation = req.body.meetingPoint;
 
-          request.save( (err) => {
+          request.save((err) => {
             if (err) {
               res.status(400);
               res.send("Could not accept request " + requestId + ". Its status remains pending.");
@@ -141,7 +141,7 @@ router.route('/:userId/accept/:requestId')
 // Let a helper cancel his/her ability to complete a task
 router.route('/:userId/removeHelper/:requestId')
   .patch(function(req, res) {
-    console.log("PATCH: /users/" + req.params.userId +"/removeHelper/" + req.params.requestId);
+    console.log("PATCH: /users/" + req.params.userId + "/removeHelper/" + req.params.requestId);
     Request.findOneAndUpdate( { _id: req.params.requestId}, {$set: { helper: null, status: "Pending"}})
       .populate('requester')
       .exec(function(err, oldRequest) {
@@ -172,9 +172,19 @@ router.route('/:userId/removeHelper/:requestId')
 router.route('/sendNotification')
   .post(function(req, res){
     console.log("POST: /users/sendNotification");
-
     PushController.sendPushWithMessage(req.body.deviceId, req.body.message);
-    res.send("Sent notification to Device Id " + req.body.deviceId);
+      const msg = "Sent notification to Device Id " + req.body.deviceId
+      res.send(msg);
+      console.log(msg);
     })
+
+router.route('/sendToMe')
+  .post(function(req, res){
+    console.log("POST: /users/sendToMe");
+    PushController.sendPushToMyself(req.body.message);
+      const msg = "Sent notification to researcher"
+      res.send(msg);
+      console.log(msg);
+  })
 
 module.exports = router;

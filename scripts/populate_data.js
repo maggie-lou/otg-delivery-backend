@@ -207,7 +207,7 @@ var locations = [
   // ["Starbucks",42.049677, -87.681824],
   // ["BlazePizza", 42.049614, -87.681795],
   // ["Panera", 42.048555, -87.681854],
-  // ["OliveMeditarraneanGrill", 42.049461, -87.681816],
+  // ["OliveMediterraneanGrill", 42.049461, -87.681816],
   // ["AndysFrozenCustard", 42.048445, -87.681425],
   //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
@@ -278,6 +278,7 @@ function postMeetingPoints(MeetingPoints) {
       function(error, response, body) {
         if (error) {
           console.log("Failed to populate location data");
+          console.log(error);
         }
       }
     );

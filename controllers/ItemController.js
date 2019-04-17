@@ -1,14 +1,14 @@
-var express = require('express');
+let express = require('express');
 
-var Item = require('../models/Item');
-var Location = require('../models/Location');
+let Item = require('../models/Item');
+let Location = require('../models/Location');
 const router = express.Router();
 
 router.route('/')
   .post(function(req, res){
     console.log("POST: /items");
 
-    var item = new Item();
+    let item = new Item();
     item.name = req.body.name;
     item.price = req.body.price;
     item.location = req.body.location;
@@ -41,7 +41,7 @@ router.route('/')
             console.log("Error getting items for location " + location);
             res.send(err);
           }
-          console.log(items);
+          //console.log(items);
           res.send(items);
         })
     });

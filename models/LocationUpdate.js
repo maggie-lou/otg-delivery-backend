@@ -6,7 +6,7 @@ var LocationUpdateSchema = new Schema({
   longitude: Number,
   speed: Number, // (m/s)
   direction: Number, // (degrees, starting north and going clockwise)
-  uncertainty: Number, // (m, radius of uncertainty from latitude and longitutde)
+  uncertainty: Number, // (m, radius of uncertainty from latitude and longitude)
   timestamp: Date,
   userId: {type: Schema.Types.ObjectId, ref: 'User'},
 });

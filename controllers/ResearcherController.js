@@ -3,7 +3,6 @@ var PushController = require('./push');
 var Request = require('../models/request');
 const router = express.Router();
 
-
 router.route('/accept/:requestId')
   .post(function(req, res) {
     console.log("POST: /researcher/accept/" + req.params.requestId);

@@ -2,7 +2,6 @@ var express = require('express');
 var LoggingEvent = require('../models/LoggingEvent');
 const router = express.Router();
 
-
 // Logging of Geofence entrances
 router.route('/')
 

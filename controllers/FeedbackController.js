@@ -6,23 +6,23 @@ var User = require('../models/User');
 var PushController = require('./push');
 
 router.route('/')
-    .post(function(req, res){
+  .post(function(req, res){
 
-        console.log("POST: posting feedback");
+      console.log("POST: posting feedback");
 
-        var feedback = new Feedback()
+      var feedback = new Feedback()
 
-        feedback.feedbackText = req.body.feedbackText;
+      feedback.feedbackText = req.body.feedbackText;
 
-        console.log(req.body);
-        console.log("Feedback text: " + req.body.feedbackText)
+      console.log(req.body);
+      console.log("Feedback text: " + req.body.feedbackText)
 
-        feedback.save(function(error){
-            res.status(200);
-            res.send("Feedback added!")
-        });
+      feedback.save(function(error){
+          res.status(200);
+          res.send("Feedback added!")
+      });
 
-    });
+  });
 
 
 router.route('/sendPush')

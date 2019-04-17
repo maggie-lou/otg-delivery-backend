@@ -20,7 +20,7 @@ router.route('/')
   .post(function(req, res){
     console.log("POST: /meeting");
 
-    var meetingPoint = new Meeting();
+    let meetingPoint = new Meeting();
     meetingPoint.name = req.body.name;
     meetingPoint.latitude = req.body.latitude;
     meetingPoint.longitude = req.body.longitude;
@@ -35,6 +35,5 @@ router.route('/')
       res.send(meetingPointDocument);
     })
   })
-
 
 module.exports = router;
