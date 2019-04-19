@@ -75,6 +75,7 @@ exports.sendPushWithMessage = (deviceTokens, message, response) => {
     } else {
       console.log("Response is undefined");
       console.log(result);
+      console.log(result["failed"]);
     }
   }).catch(error => {
     if (response !== undefined) {
@@ -117,13 +118,3 @@ exports.sendSilentRefreshNotification = (deviceTokens, dataSet, response) => {
 
   apnConnection.shutdown();
 };
-
-exports.sendPushToMyself = (message) => {
-  console.log("Sending push to self");
-  //var myDeviceId = "BD399029ADC7EC6BF7FB50E7C490C9C8A87E62BA4663F0123B9421B4DB51072E"; //maggie's device
-  var myDeviceId = "E97831950E45DF46A24011D68721AB3BF7F944C410924AABD90A7AD91AF6380D";
-
-  exports.sendPushWithMessage([myDeviceId], message);
-};
-
-
