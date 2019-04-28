@@ -14,8 +14,6 @@ router.route('/')
     user.username = req.body.username;
     user.phoneNumber = req.body.phoneNumber;
 
-    PushController.sendPushToMyself(`${req.body.username} signed up!`);
-
     user.save(function(err, userDocument){
       if(err){
         res.send(err);

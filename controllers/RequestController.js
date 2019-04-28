@@ -34,34 +34,56 @@ router.route('/')
             return;
         }
 
-        PushController.sendPushToMyself("Request submitted. Start time: " + Parse.parseDateToTime(req.body.orderStartTime) + ". End time: " + Parse.parseDateToTime(req.body.orderEndTime) + "Item: " + req.body.item + " Meeting points: " + req.body.deliveryLocationOptions + " Request ID: " + savedReq.id);
-
         res.json({message: 'Request created!'});
       });
     })
 
-    .get(function(req, res) {
-      console.log("GET: /request");
-      const {ObjectId} = require('mongodb');
-      var status = req.query.status || "";
-      var excludingRequesterId = req.query.excluding || "000000000000000000000000";
-      excludingRequesterId = ObjectId(excludingRequesterId);
+  //GET: Return requests
+  .get((req, res) => {
+    console.log("GET: /request");
+    const {ObjectId} = require('mongodb');
+    var status = req.query.status || "";
+    var excludingRequesterId = req.query.excluding || "000000000000000000000000";
+    excludingRequesterId = ObjectId(excludingRequesterId);
 
-      Request.find({
-        'endTime': {$gte: Date.now()},
-        'status': new RegExp(status),
-        'requester': {$ne: excludingRequesterId}, //not returning requester's requests
-      })
-        .populate('orderDescription')
-        .populate('requester')
-        .exec(function(err, dbRequests) {
-          if (err) {
-            console.log("Error getting requests");
-            res.send(err);
-          }
-          res.send(dbRequests);
-        })
+    Request.find({
+      'endTime': {$gte: Date.now()},
+      'status': new RegExp(status),
+      'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
+      .populate('orderDescription')
+      .populate('requester')
+      .exec(function(err, dbRequests) {
+        if (err) {
+          console.log("Error getting requests");
+          res.send(err);
+        } else {
+          res.send(dbRequests);
+        }
+      })
+  })
+
+router.route('/all')
+  .get((req, res) => {
+    Request.find()
+      .exec((err, requests) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(requests);
+        }
+      })
+    })
+  .delete((req, res) => {
+    Request.deleteMany()
+      .exec((err, requests) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.send("All gone!")
+        }
+      })
+  })
 
 router.route('/:id')
   .get(function(req, res) {

@@ -40,6 +40,7 @@ router.route('/')
           if (err) {
             console.log("Error getting items for location " + location);
             res.send(err);
+            return;
           }
           //console.log(items);
           res.send(items);
