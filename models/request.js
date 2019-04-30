@@ -15,6 +15,7 @@ var RequestSchema = new Schema({
   timeProbabilities: String,
   planningNotes: String,
   pickupLocation: String,
+  price: String,
 });
 
 module.exports = mongoose.model('Request', RequestSchema);

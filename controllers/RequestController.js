@@ -24,6 +24,7 @@ router.route('/')
       request.deliveryLocationOptions = req.body.deliveryLocationOptions;
       request.timeProbabilities = req.body.timeProbabilities;
       request.pickupLocation = req.body.pickupLocation;
+      request.price = req.body.price;
 
       //save request
       request.save(function(err, savedReq){
@@ -111,7 +112,6 @@ router.route('/:id')
         res.send(err);
         return;
       }
-      PushController.sendPushToMyself("Request " + requestId + " deleted");
 
       res.json({message: 'Request deleted!'});
     });
