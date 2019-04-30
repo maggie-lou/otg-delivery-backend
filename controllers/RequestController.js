@@ -23,6 +23,7 @@ router.route('/')
       request.deliveryLocation = req.body.deliveryLocation;
       request.deliveryLocationOptions = req.body.deliveryLocationOptions;
       request.timeProbabilities = req.body.timeProbabilities;
+      request.pickupLocation = req.body.pickupLocation;
 
       //save request
       request.save(function(err, savedReq){
@@ -42,13 +43,13 @@ router.route('/')
   .get((req, res) => {
     console.log("GET: /request");
     const {ObjectId} = require('mongodb');
-    var status = req.query.status || "";
-    var excludingRequesterId = req.query.excluding || "000000000000000000000000";
+    //const status = req.query.status || "";
+    let excludingRequesterId = req.query.excluding || "000000000000000000000000";
     excludingRequesterId = ObjectId(excludingRequesterId);
 
     Request.find({
-      'endTime': {$gte: Date.now()},
-      'status': new RegExp(status),
+      //'endTime': {$gte: Date.now()},
+      //'status': new RegExp(status),
       'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
       .populate('orderDescription')
@@ -127,7 +128,7 @@ router.route('/:id')
           endTime: req.body.endTime,
           // status: req.body.status, // Bug where it's using cached old status
           deliveryLocation: req.body.deliveryLocation,
-          deliveryLocationDetails: req.body.deliveryLocationDetails
+          deliveryLocationDetails: req.body.deliveryLocationDetails,
         }},
       { new: true},
 

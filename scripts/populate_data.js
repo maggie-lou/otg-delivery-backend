@@ -287,10 +287,9 @@ function postMeetingPoints(MeetingPoints) {
 
 // ********** CALLS ************************
 
-// function postItems(location, items, prodLocationId, devLocationId) {
-// postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
+//postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
 //postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
-// postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
+//postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
 //postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
 //postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
 //postItems("Study", studyItems, "5c82c2e701bfde0016c91f8c", "5c82b653764eef7a920fc0d8");

@@ -14,6 +14,7 @@ var RequestSchema = new Schema({
   requesterTextRespondTime: Date,
   timeProbabilities: String,
   planningNotes: String,
+  pickupLocation: String,
 });
 
 module.exports = mongoose.model('Request', RequestSchema);
