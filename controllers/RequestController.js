@@ -12,10 +12,10 @@ router.route('/')
   //POST: create a new request
   .post(function(req, res) {
       console.log("POST: request for " + req.body.requester);
-      console.log(req.body);
 
       var request = new Request();
       request.requester = req.body.requester;
+      request.helper = req.body.helper;
       request.orderStartTime = req.body.orderStartTime;
       request.orderEndTime = req.body.orderEndTime;
       request.item = req.body.item;
@@ -28,7 +28,6 @@ router.route('/')
 
       //save request
       request.save(function(err, savedReq){
-        //return the error in response if it exists
         if (err){
             console.log("Error creating new request");
             console.log(err);
@@ -124,6 +123,7 @@ router.route('/:id')
       {$set:
         {
           requester: req.body.requester,
+          helper: req.body.helper,
           orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
           // status: req.body.status, // Bug where it's using cached old status

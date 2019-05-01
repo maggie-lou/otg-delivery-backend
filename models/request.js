@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var RequestSchema = new Schema({
   requester: {type: Schema.Types.ObjectId, ref: 'User'},
+  helper: {type: Schema.Types.ObjectId, ref: 'User'},
 	orderStartTime: {type: Date, default: Date.now},
 	orderEndTime: {type: Date, default: Date.now},
   item: String,

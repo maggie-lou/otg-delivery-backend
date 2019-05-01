@@ -58,6 +58,7 @@ router.route('/:id/requests')
         }]}]})
       .populate('orderDescription')
       .populate('requester')
+      .populate('helper')
       .exec(function(err, requests) {
         if (err) {
           console.log("Error getting requests for " + req.params.id);
@@ -114,9 +115,9 @@ router.route('/:userId/accept/:requestId')
             return;
           }
 
-          request.status = `Accepted by ${helper.username} (${req.body.timeEstimate})`;
+          //request.status = `Accepted by ${helper.username} (${req.body.timeEstimate})`;
           request.helper = req.params.userId;
-          request.deliveryLocation = req.body.meetingPoint;
+          //request.deliveryLocation = req.body.meetingPoint;
 
           request.save((err) => {
             if (err) {
