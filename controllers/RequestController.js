@@ -54,6 +54,7 @@ router.route('/')
     })
       .populate('orderDescription')
       .populate('requester')
+      .populate('helper')
       .exec(function(err, dbRequests) {
         if (err) {
           console.log("Error getting requests");
@@ -92,6 +93,7 @@ router.route('/:id')
     Request.findById(req.params.id)
       .populate('orderDescription')
       .populate('requester')
+      .populate('helper')
       .exec(function(err, request) {
         if (err) {
           console.log("Error getting request " + req.params.id);
@@ -186,6 +188,7 @@ router.route('/task/:userId')
       .sort('orderTime')
       .populate('orderDescription')
       .populate('requester')
+      .populate('helper')
       .exec(function(err, dbRequests) {
         if (err) {
           res.send(err);
