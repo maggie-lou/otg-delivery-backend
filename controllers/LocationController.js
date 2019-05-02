@@ -26,13 +26,49 @@ router.route('/')
   .get(function(req, res) {
     console.log("GET: /location");
     Location.find({})
-      .exec(function(err, dbRequests) {
+      .exec(function(err, locations) {
         if (err) {
-          console.log("Error getting requests");
+          console.log("Error getting locations");
           res.send(err);
         }
-        res.send(dbRequests);
+        res.send(locations);
       })
+  })
+
+  .delete((req, res) => {
+    console.log("DELETE: /location");
+    Location.deleteMany({})
+      .exec((err, locations) => {
+        if (err) {
+          console.log("Error deleting locations");
+          res.send(err);
+        }
+        res.send(locations);
+      })
+  })
+
+router.route('/name')
+  .get((req, res) => {
+    console.log("GET: /locations/name");
+    Location.findOne({'name': req.body.name})
+      .exec(function(err, location) {
+        if (err) {
+          console.log("Error getting location");
+          res.send(err);
+        }
+        res.send(location);
+      })
+  })
+  .delete((req, res) => {
+    console.log("DELETE: /locations/name");
+    Location.deleteOne({'name': req.body.name})
+    .exec(function(err, location) {
+      if (err) {
+        console.log("Error deleting location");
+        res.send(err);
+      }
+      res.send(location);
+    })
   })
 
 module.exports = router;

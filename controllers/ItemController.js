@@ -26,23 +26,49 @@ router.route('/')
     })
   })
 
+router.route('/all')
+  .get((req, res) => {
+    console.log("GET: items/all")
+    Item.find()
+      .exec((err, items) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.send(items)
+        }
+      })
+  })
+  .delete((req, res) => {
+    console.log("DELETE: items/all")
+    Item.deleteMany()
+      .exec((err) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.send("All Items Deleted.")
+        }
+      })
+  })
+
+router.route('/:id/:name')
   .get(function(req, res) {
-    console.log("GET: /items");
-    Location.find({ 'name': req.query.location }, function(err, location) {
+    console.log("GET: /items/:id/:name");
+    Location.findOne({ 'name': req.params.name }, function(err, location) {
       if (err) {
         console.log("Error finding location " + location);
         res.send(err);
       }
-
-      Item.find({ 'location': location[0]._id })
+      Item.find({ 'location': req.params.id })
         .sort('name')
         .exec(function(err, items) {
+          console.log(location)
+          console.log(req.params.id)
+          console.log(items)
           if (err) {
             console.log("Error getting items for location " + location);
             res.send(err);
             return;
           }
-          //console.log(items);
           res.send(items);
         })
     });
@@ -60,6 +86,5 @@ router.route('/:id')
         res.send(item)
       });
     })
-
 
 module.exports = router;

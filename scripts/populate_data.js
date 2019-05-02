@@ -201,14 +201,14 @@ var techExpressItems = [
 
 var locations = [
   ["Study", 0, 0],
-  // ["Tomate", 42.058345, -87.683724],
-  // ["TechExpress", 42.057816, -87.677123], // On Sheridan
-  // ["CoffeeLab", 42.058455, -87.683737],
-  // ["Starbucks",42.049677, -87.681824],
-  // ["BlazePizza", 42.049614, -87.681795],
-  // ["Panera", 42.048555, -87.681854],
-  // ["OliveMediterraneanGrill", 42.049461, -87.681816],
-  // ["AndysFrozenCustard", 42.048445, -87.681425],
+  ["Tomate", 42.058345, -87.683724],
+  ["TechExpress", 42.057816, -87.677123], // On Sheridan
+  ["CoffeeLab", 42.058455, -87.683737],
+  ["Starbucks",42.049677, -87.681824],
+  //["BlazePizza", 42.049614, -87.681795],
+  ["Panera", 42.048555, -87.681854],
+  //["OliveMediterraneanGrill", 42.049461, -87.681816],
+  //["AndysFrozenCustard", 42.048445, -87.681425],
   //["Tech Express", 42.057958, -87.674735], // By Mudd
 ]
 
@@ -287,11 +287,13 @@ function postMeetingPoints(MeetingPoints) {
 
 // ********** CALLS ************************
 
-//postItems("Tomate", tomateItems, 0, "5c3ceffdc5f3184d02fec0bc");
-//postItems("TechExpress", techExpressItems, "5c54a1f33332080016095014", "5c3ceffdc5f3184d02fec0bd");
-//postItems("CoffeeLab", coffeeLabItems, 0, "5c3ceffdc5f3184d02fec0c0");
-//postItems("Starbucks", starbucksItems, 0, "5c3ceffdc5f3184d02fec0be");
-//postItems("Panera", paneraItems, "5c54a1f3333208001609501b", "5c3ceffdc5f3184d02fec0bf");
-//postItems("Study", studyItems, "5c82c2e701bfde0016c91f8c", "5c82b653764eef7a920fc0d8");
+/* To populate all, first post locations/meeting points. Then, use postman to find the 
+_id of each location and set is as the id of the items, then run again with postItems uncommented*/
+
 //postLocations(locations);
-postMeetingPoints(meetingPoints);
+//postMeetingPoints(meetingPoints);
+postItems("Tomate", tomateItems, "5ccb7e1d857f2e0f94244994", "5ccb7e1d857f2e0f94244994");
+postItems("TechExpress", techExpressItems, "5ccb7e1d857f2e0f94244993", "5ccb7e1d857f2e0f94244993");
+postItems("CoffeeLab", coffeeLabItems, "5ccb7e1d857f2e0f94244995", "5ccb7e1d857f2e0f94244995");
+postItems("Starbucks", starbucksItems, "5ccb7e1d857f2e0f94244997", "5ccb7e1d857f2e0f94244997");
+postItems("Panera", paneraItems, "5ccb7e1d857f2e0f94244996", "5ccb7e1d857f2e0f94244996");
