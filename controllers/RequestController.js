@@ -56,6 +56,7 @@ router.route('/')
       .populate('requester')
       .populate('helper')
       .exec(function(err, dbRequests) {
+        console.log(dbRequests)
         if (err) {
           console.log("Error getting requests");
           res.send(err);
@@ -128,7 +129,7 @@ router.route('/:id')
           helper: req.body.helper,
           orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
-          // status: req.body.status, // Bug where it's using cached old status
+          status: req.body.status,
           deliveryLocation: req.body.deliveryLocation,
           deliveryLocationDetails: req.body.deliveryLocationDetails,
         }},
@@ -173,6 +174,50 @@ router.route('/:id/status')
         });
     });
 
+router.route('/:id/price')
+.patch(function(req, res) {
+  console.log("PATCH: Change price for " + req.params.id + "to " + req.body.price);
+
+  Request.findById(req.params.id)
+    .exec( (err, request) => {
+      if(err) {
+        console.log("Error updating request.");
+        res.send(err);
+        return;
+      } else {
+        request.price = req.body.price;
+        request.save( (e) => {
+          if(e) {
+            res.status(400);
+            res.send(`Could not update price for request ${req.params.id} to ${req.body.price}`);
+            return;
+          }
+        });
+        console.log("Request price for ID " + req.params.id + " updated");
+        res.send("Request price for ID " + req.params.id + " updated");
+      }
+    });
+});
+
+router.route('/:id/removeHelper')
+  .patch((req, res) => {
+    console.log("PATCH: Remove helper for request " + req.params.id);
+    Request.findById(req.params.id)
+      .exec((err, request) => {
+        if (err) {
+          res.send(err)
+        } else {
+          request.helper = request.requester
+          request.save((err) => {
+            if (err) {
+              res.send("Could not remove helper from request " + req.params.id)
+            } else {
+              res.send("Succeeded in removing helper.")
+            }
+          })
+        }
+      })
+  })
 
 router.route('/task/:userId')
   .post(function(req, res) {

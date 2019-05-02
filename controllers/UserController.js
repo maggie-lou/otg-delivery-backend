@@ -25,6 +25,29 @@ router.route('/')
     })
   })
 
+router.route('/all')
+  .get(function(req, res){
+    console.log("GET: /users/all");
+
+    User.find()
+      .exec((err, users) => {
+        if(err){
+          res.send(err);
+          return;
+        }
+        res.send(users);
+    })
+  })
+  .delete((req, res) => {
+    User.deleteMany()
+      .exec((err, users) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.send(users)
+        }
+      })
+  })
 
 router.route('/:id')
   .get(function(req, res) {
@@ -47,15 +70,7 @@ router.route('/:id/requests')
 
     // Open and expired
     // OR Non-Pending, non-completed
-    Request.find({
-      $and: [{
-        requester: req.params.id,
-      },
-        {$or: [{
-          status: 'Pending', 'endTime': {$gte: Date.now()}
-        }, {
-          status: {$nin: ["Pending", "Completed", "Not Completed"]}
-        }]}]})
+    Request.find({requester: req.params.id})
       .populate('orderDescription')
       .populate('requester')
       .populate('helper')
