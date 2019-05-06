@@ -4,8 +4,8 @@ const apn = require('apn');
  * Determine what certificates to use and setup APN.
  */
 // Looking for development or production environment
-//const nodeEnv = process.env.NODE_ENV || '';
-const nodeEnv = 'development'
+const nodeEnv = process.env.NODE_ENV || '';
+//const nodeEnv = 'development'
 
 let options = {},
   topic = '';

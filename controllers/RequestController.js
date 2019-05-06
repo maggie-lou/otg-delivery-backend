@@ -56,7 +56,6 @@ router.route('/')
       .populate('requester')
       .populate('helper')
       .exec(function(err, dbRequests) {
-        console.log(dbRequests)
         if (err) {
           console.log("Error getting requests");
           res.send(err);
@@ -154,7 +153,7 @@ router.route('/:id/status')
       console.log("PATCH: Change request status for " + req.params.id + "to status " + req.body.status);
 
       Request.findById(req.params.id)
-        .exec( (err, request) => {
+        .exec((err, request) => {
           if(err) {
             console.log("Error updating request.");
             res.send(err);

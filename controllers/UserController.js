@@ -49,7 +49,7 @@ router.route('/all')
       })
   })
 
-router.route('/:id')
+/*router.route('/:id')
   .get(function(req, res) {
     console.log("GET: /users");
 
@@ -61,7 +61,7 @@ router.route('/:id')
       }
       res.send(user);
     })
-  })
+  })*/
 
 
 router.route('/:id/requests')

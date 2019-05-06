@@ -16,7 +16,7 @@ app.use(function(req, res, next) {
 // Configure database and data models
 const env = "" + process.env.NODE_ENV;
 console.log("ENV: " + env);
-const config = require('./config/db')["dev" || env];
+const config = require('./config/db')[env || "dev"];
 console.log(config);
 
 const mongoose = require('mongoose');
