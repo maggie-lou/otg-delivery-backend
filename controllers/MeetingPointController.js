@@ -21,10 +21,12 @@ router.route('/')
     console.log("POST: /meeting");
 
     let meetingPoint = new Meeting();
-    meetingPoint.name = req.body.name;
     meetingPoint.latitude = req.body.latitude;
     meetingPoint.longitude = req.body.longitude;
     meetingPoint.requestId = req.body.requestId;
+    meetingPoint.description = req.body.description;
+    meetingPoint.startTime = req.body.startTime;
+    meetingPoint.endTime = req.body.endTime;
 
     meetingPoint.save(function(err, meetingPointDocument){
       if(err){

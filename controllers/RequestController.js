@@ -31,10 +31,9 @@ router.route('/')
             console.log("Error creating new request");
             console.log(err);
             res.send(err);
-            return;
+        } else {
+          res.send(savedReq._id);
         }
-
-        res.json({message: 'Request created!'});
       });
     })
 
@@ -97,8 +96,9 @@ router.route('/:id')
         if (err) {
           console.log("Error getting request " + req.params.id);
           res.send(err);
+        } else {
+          res.send(request);
         }
-        res.send(request)
       })
     })
 
@@ -106,7 +106,7 @@ router.route('/:id')
     let requestId = req.params.id;
     console.log("DELETE: delete request with id " + req.params.id);
 
-    Request.remove({ _id: requestId}, function(err){
+    Request.deleteOne({ _id: requestId}, function(err){
       if (err) {
         console.log(err);
         res.send(err);

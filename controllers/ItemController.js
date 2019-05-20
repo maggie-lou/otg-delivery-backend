@@ -61,9 +61,6 @@ router.route('/:id/:name')
       Item.find({ 'location': req.params.id })
         .sort('name')
         .exec(function(err, items) {
-          console.log(location)
-          console.log(req.params.id)
-          console.log(items)
           if (err) {
             console.log("Error getting items for location " + location);
             res.send(err);
@@ -82,7 +79,6 @@ router.route('/:id')
           console.log("Error getting item " + req.params.id);
           res.send(err);
         }
-        console.log(item);
         res.send(item)
       });
     })
