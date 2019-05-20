@@ -1,11 +1,10 @@
 var request = require("request");
 
-var production = true;
-var local = true;
+var development = false;
 
 var devURL = "http://localhost:8080/";
 var prodURL = "https://otg-delivery.herokuapp.com/";
-var apiURL = local ? devURL: prodURL;
+var apiURL = development ? devURL : prodURL;
 
 var meetingPoints = [
   "Tech Lobby",
@@ -215,10 +214,10 @@ var locations = [
 
 function postItems(location, items, prodLocationId, devLocationId) {
   var locationId = "";
-  if(production) {
-    locationId = prodLocationId;
-  } else {
+  if(development) {
     locationId = devLocationId;
+  } else {
+    locationId = prodLocationId;
   }
 
   for (i=0; i<items.length; i++) {
@@ -292,8 +291,8 @@ _id of each location and set is as the id of the items, then run again with post
 
 //postLocations(locations);
 //postMeetingPoints(meetingPoints);
-postItems("Tomate", tomateItems, "5ccb7e1d857f2e0f94244994", "5ccb7e1d857f2e0f94244994");
-postItems("TechExpress", techExpressItems, "5ccb7e1d857f2e0f94244993", "5ccb7e1d857f2e0f94244993");
-postItems("CoffeeLab", coffeeLabItems, "5ccb7e1d857f2e0f94244995", "5ccb7e1d857f2e0f94244995");
-postItems("Starbucks", starbucksItems, "5ccb7e1d857f2e0f94244997", "5ccb7e1d857f2e0f94244997");
-postItems("Panera", paneraItems, "5ccb7e1d857f2e0f94244996", "5ccb7e1d857f2e0f94244996");
+postItems("Tomate", tomateItems, "5cda48786151300016ad8826", "5ccb7e1d857f2e0f94244994");
+postItems("TechExpress", techExpressItems, "5cda48786151300016ad8825", "5ccb7e1d857f2e0f94244993");
+postItems("CoffeeLab", coffeeLabItems, "5cda48786151300016ad8824", "5ccb7e1d857f2e0f94244995");
+postItems("Starbucks", starbucksItems, "5cda48786151300016ad8828", "5ccb7e1d857f2e0f94244997");
+postItems("Panera", paneraItems, "5cda48786151300016ad8823", "5ccb7e1d857f2e0f94244996");

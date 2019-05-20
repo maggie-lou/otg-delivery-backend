@@ -24,6 +24,7 @@ router.route('/')
     meetingPoint.name = req.body.name;
     meetingPoint.latitude = req.body.latitude;
     meetingPoint.longitude = req.body.longitude;
+    meetingPoint.requestId = req.body.requestId;
 
     meetingPoint.save(function(err, meetingPointDocument){
       if(err){
@@ -34,6 +35,21 @@ router.route('/')
       console.log(meetingPointDocument);
       res.send(meetingPointDocument);
     })
+  })
+
+router.route('/:requestId')
+  .get((req, res) => {
+    const requestId = req.params.requestId;
+    console.log(`GET: /meeting/${requestId}`)
+
+    meetingPoint.find({requestId: requestId})
+      .exec((err, points) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(points);
+        }
+      })
   })
 
 module.exports = router;

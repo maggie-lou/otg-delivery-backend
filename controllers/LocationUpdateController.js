@@ -31,12 +31,29 @@ router.route('/')
   .get(function(req, res) {
     console.log("GET: /locupdates");
     LocationUpdate.find({})
-      .exec(function(err, dbRequests) {
+      .exec(function(err, updates) {
+        if (err) {
+          console.log("Error getting updates");
+          res.send(err);
+        } else {
+          res.send(updates);
+        }
+      })
+  })
+
+router.route('/:id/recent')
+  .get((req, res) => { //get most recent location for user
+    const id = req.params.id;
+    console.log(`GET: /locupdates/${id}/recent`);
+
+    LocationUpdate.find({userId: id})
+      .exec((err, updates) => {
         if (err) {
           console.log("Error getting requests");
           res.send(err);
+        } else {
+          res.send(updates[updates.length - 1]); //should return most recent update
         }
-        res.send(dbRequests);
       })
   })
 

@@ -20,8 +20,7 @@ router.route('/')
       request.orderEndTime = req.body.orderEndTime;
       request.item = req.body.item;
       request.status = req.body.status;
-      request.deliveryLocation = req.body.deliveryLocation;
-      request.deliveryLocationOptions = req.body.deliveryLocationOptions;
+      request.meetingPoint = req.body.meetingPoint;
       request.timeProbabilities = req.body.timeProbabilities;
       request.pickupLocation = req.body.pickupLocation;
       request.price = req.body.price;
@@ -129,8 +128,7 @@ router.route('/:id')
           orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
           status: req.body.status,
-          deliveryLocation: req.body.deliveryLocation,
-          deliveryLocationDetails: req.body.deliveryLocationDetails,
+          meetingPoint: req.body.meetingPoint,
         }},
       { new: true},
 
