@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var MeetingPointSchema = new Schema({
   latitude: Number,
   longitude: Number,
+  radius: Number,
   requestId: String,
   description: String,
   startTime: String,

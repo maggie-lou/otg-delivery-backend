@@ -1,12 +1,12 @@
 var express = require('express');
 const router = express.Router();
 
-var Meeting = require('../models/MeetingPoint');
+var MeetingPoint = require('../models/MeetingPoint');
 
 router.route('/')
   .get(function(req, res) {
     console.log("GET: /meeting");
-    Meeting.find({})
+    MeetingPoint.find({})
       .exec(function(err, dbRequests) {
         if (err) {
           console.log(err);
@@ -20,15 +20,16 @@ router.route('/')
   .post(function(req, res){
     console.log("POST: /meeting");
 
-    let meetingPoint = new Meeting();
+    let meetingPoint = new MeetingPoint();
     meetingPoint.latitude = req.body.latitude;
     meetingPoint.longitude = req.body.longitude;
+    meetingPoint.radius = req.body.radius;
     meetingPoint.requestId = req.body.requestId;
     meetingPoint.description = req.body.description;
     meetingPoint.startTime = req.body.startTime;
     meetingPoint.endTime = req.body.endTime;
 
-    meetingPoint.save(function(err, meetingPointDocument){
+    meetingPoint.save((err, meetingPointDocument) => {
       if(err){
         res.send(err);
         return;
@@ -44,7 +45,7 @@ router.route('/:requestId')
     const requestId = req.params.requestId;
     console.log(`GET: /meeting/${requestId}`)
 
-    meetingPoint.find({requestId: requestId})
+    MeetingPoint.find({requestId: requestId})
       .exec((err, points) => {
         if (err) {
           res.send(err);

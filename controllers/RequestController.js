@@ -24,6 +24,8 @@ router.route('/')
       request.timeProbabilities = req.body.timeProbabilities;
       request.pickupLocation = req.body.pickupLocation;
       request.price = req.body.price;
+      request.description = req.body.description;
+      request.eta = req.body.eta;
 
       //save request
       request.save(function(err, savedReq){
@@ -50,10 +52,10 @@ router.route('/')
       //'status': new RegExp(status),
       'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
-      .populate('orderDescription')
       .populate('requester')
       .populate('helper')
       .exec(function(err, dbRequests) {
+        console.log("The retrieved requests are" + dbRequests)
         if (err) {
           console.log("Error getting requests");
           res.send(err);
@@ -89,7 +91,6 @@ router.route('/:id')
   .get(function(req, res) {
     console.log("GET: get request with id " + req.params.id);
     Request.findById(req.params.id)
-      .populate('orderDescription')
       .populate('requester')
       .populate('helper')
       .exec(function(err, request) {
@@ -125,7 +126,6 @@ router.route('/:id')
         {
           requester: req.body.requester,
           helper: req.body.helper,
-          orderDescription: req.body.orderDescription,
           endTime: req.body.endTime,
           status: req.body.status,
           meetingPoint: req.body.meetingPoint,
@@ -228,7 +228,6 @@ router.route('/task/:userId')
       pickupLocation: { $in: eligiblePickupLocations },
     })
       .sort('orderTime')
-      .populate('orderDescription')
       .populate('requester')
       .populate('helper')
       .exec(function(err, dbRequests) {
@@ -240,9 +239,8 @@ router.route('/task/:userId')
         if (dbRequests.length == 0) {
           console.log("No available tasks");
         } else {
-          console.log(dbRequests[0]);
+          res.send(dbRequests[0]);
         }
-        res.send(dbRequests[0]);
       });
   })
 
