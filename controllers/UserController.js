@@ -110,23 +110,22 @@ router.route('/:userId/accept/:requestId')
     Request.findById(req.params.requestId)
       .populate('requester')
       .populate('helper')
-      .exec( (err, request) => {
+      .exec((err, request) => {
         if (err) {
           res.status(500);
           res.send(`Could not find request ${req.params.requestId}. Cannot be accepted.`);
           return;
         }
-
         User.findById(req.params.userId, (err, helper) => {
           if (err) {
             res.status(400);
             res.send("Could not find helper " + req.params.userId + ", so request " + req.params.requestId + " could not be accepted. Its status remains pending.");
             return;
           }
-
           request.status = `Accepted`;
           request.helper = req.params.userId;
-          //request.deliveryLocation = req.body.meetingPoint;
+          request.meetingPoint = req.body.meetingPointId;
+          request.eta = req.body.eta;
 
           request.save((err) => {
             if (err) {

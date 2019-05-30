@@ -40,10 +40,25 @@ router.route('/')
     })
   })
 
-router.route('/:requestId')
+router.route('/:id')
+  .get((req, res) => {
+    const id = req.params.id;
+    console.log(`GET: /meeting/${id}`)
+
+    MeetingPoint.findOne({_id: id})
+      .exec((err, point) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(point);
+        }
+      })
+  })
+
+router.route('/:requestId/request')
   .get((req, res) => {
     const requestId = req.params.requestId;
-    console.log(`GET: /meeting/${requestId}`)
+    console.log(`GET: /meeting/${requestId}/request`)
 
     MeetingPoint.find({requestId: requestId})
       .exec((err, points) => {

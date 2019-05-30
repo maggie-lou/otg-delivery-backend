@@ -3,12 +3,12 @@ const apn = require('apn');
 /*
  * Determine what certificates to use and setup APN.
  */
-const nodeEnv = process.env.NODE_ENV || '';
+const nodeEnv = "" + process.env.NODE_ENV;
 
 let options = {},
   topic = '';
 
-if (nodeEnv === 'development') {
+if (nodeEnv === 'dev') {
   // Development Push
   console.log('Using DEVELOPMENT push.');
 
@@ -23,8 +23,8 @@ if (nodeEnv === 'development') {
 
   topic = 'edu.northwestern.delta.otgDev';
 } else {
-  // Enterprise push
-  console.log('Using ENTERPRISE push.');
+  // Production/Enterprise push
+  console.log('Using PRODUCTION push.');
 
   options = {
     cert: __dirname + '/../push_certificates/cert.pem',

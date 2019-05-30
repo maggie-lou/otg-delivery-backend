@@ -120,15 +120,12 @@ router.route('/:id')
 
   .patch(function(req, res) {
     console.log("POST: Update request " + req.params.id);
-    Request.findOneAndUpdate(
+    Request.findOneAndReplace(
       { _id: req.params.id},
       {$set:
         {
-          requester: req.body.requester,
-          helper: req.body.helper,
-          endTime: req.body.endTime,
-          status: req.body.status,
-          meetingPoint: req.body.meetingPoint,
+          eta: req.body.eta,
+          meetingPoint: req.body.meetingPoint
         }},
       { new: true},
 
@@ -172,49 +169,74 @@ router.route('/:id/status')
     });
 
 router.route('/:id/price')
-.patch(function(req, res) {
-  console.log("PATCH: Change price for " + req.params.id + "to " + req.body.price);
+  .patch(function(req, res) {
+    console.log("PATCH: Change price for " + req.params.id + "to " + req.body.price);
 
-  Request.findById(req.params.id)
-    .exec( (err, request) => {
-      if(err) {
-        console.log("Error updating request.");
-        res.send(err);
-        return;
-      } else {
-        request.price = req.body.price;
-        request.save( (e) => {
-          if(e) {
-            res.status(400);
-            res.send(`Could not update price for request ${req.params.id} to ${req.body.price}`);
-            return;
-          }
-        });
-        console.log("Request price for ID " + req.params.id + " updated");
-        res.send("Request price for ID " + req.params.id + " updated");
-      }
-    });
-});
+    Request.findById(req.params.id)
+      .exec( (err, request) => {
+        if(err) {
+          console.log("Error updating request.");
+          res.send(err);
+          return;
+        } else {
+          request.price = req.body.price;
+          request.save( (e) => {
+            if(e) {
+              res.status(400);
+              res.send(`Could not update price for request ${req.params.id} to ${req.body.price}`);
+              return;
+            }
+          });
+          console.log("Request price for ID " + req.params.id + " updated");
+          res.send("Request price for ID " + req.params.id + " updated");
+        }
+      });
+  });
 
-router.route('/:id/removeHelper')
-  .patch((req, res) => {
-    console.log("PATCH: Remove helper for request " + req.params.id);
+router.route('/:id/eta')
+  .patch(function(req, res) {
+    console.log("PATCH: Change eta for " + req.params.id + "to " + req.body.eta);
+
     Request.findById(req.params.id)
       .exec((err, request) => {
-        if (err) {
-          res.send(err)
+        if(err) {
+          console.log("Error updating request.");
+          res.send(err);
+          return;
         } else {
-          request.helper = request.requester
-          request.save((err) => {
-            if (err) {
-              res.send("Could not remove helper from request " + req.params.id)
-            } else {
-              res.send("Succeeded in removing helper.")
+          request.eta = req.body.eta;
+          request.save((e) => {
+            if(e) {
+              res.status(400);
+              res.send(`Could not update eta for request ${req.params.id} to ${req.body.eta}`);
+              return;
             }
-          })
+          });
+          console.log("Request eta for ID " + req.params.id + " updated");
+          res.send("Request eta for ID " + req.params.id + " updated");
         }
-      })
-  })
+      });
+  });
+
+  router.route('/:id/removeHelper')
+    .patch((req, res) => {
+      console.log("PATCH: Remove helper for request " + req.params.id);
+      Request.findById(req.params.id)
+        .exec((err, request) => {
+          if (err) {
+            res.send(err)
+          } else {
+            request.helper = request.requester
+            request.save((err) => {
+              if (err) {
+                res.send("Could not remove helper from request " + req.params.id)
+              } else {
+                res.send("Succeeded in removing helper.")
+              }
+            })
+          }
+        })
+    })
 
 router.route('/task/:userId')
   .post(function(req, res) {
@@ -243,6 +265,5 @@ router.route('/task/:userId')
         }
       });
   })
-
 
 module.exports = router;
