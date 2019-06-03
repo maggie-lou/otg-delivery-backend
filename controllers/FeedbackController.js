@@ -12,7 +12,12 @@ router.route('/')
 
       var feedback = new Feedback()
 
-      feedback.feedbackText = req.body.feedbackText;
+      feedback.userId = req.body.userId;
+      feedback.requestId = req.body.requestId;
+      feedback.nextLocation = req.body.nextLocation;
+      feedback.inconvenience = req.body.inconvenience;
+      feedback.disruption = req.body.disruption;
+      feedback.waiting = req.body.waiting;
 
       console.log(req.body);
       console.log("Feedback text: " + req.body.feedbackText)

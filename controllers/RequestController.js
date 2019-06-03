@@ -50,12 +50,12 @@ router.route('/')
     Request.find({
       //'endTime': {$gte: Date.now()},
       //'status': new RegExp(status),
+      'status': {$ne: "Completed"},
       'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
       .populate('requester')
       .populate('helper')
       .exec(function(err, dbRequests) {
-        console.log("The retrieved requests are" + dbRequests)
         if (err) {
           console.log("Error getting requests");
           res.send(err);
@@ -135,7 +135,6 @@ router.route('/:id')
           res.send(err);
         } else {
           console.log("Request with ID " + req.params.id + " updated to");
-          console.log(updatedRequest);
           res.send("Request with ID " + req.params.id + " updated");
         }
       });

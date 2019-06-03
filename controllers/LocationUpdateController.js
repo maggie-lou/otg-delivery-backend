@@ -23,7 +23,6 @@ router.route('/')
         return;
       }
 
-      // console.log(locationUpdateDocument);
       res.send(locationUpdateDocument);
     })
   })

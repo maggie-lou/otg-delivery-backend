@@ -1,6 +1,6 @@
 var request = require("request");
 
-var development = false;
+var development = true;
 
 var devURL = "http://localhost:8080/";
 var prodURL = "https://otg-delivery.herokuapp.com/";
@@ -198,17 +198,24 @@ var techExpressItems = [
   // "Veggie Empanada (1)",
 ]
 
+var lisasItems = [
+  ["Quaker Oatmeal", "", 0],
+  ["Kind Bar", "", 0],
+  ["Sea Salt and Vinegar Chips", "", 0]
+]
+
 var locations = [
-  ["Study", 0, 0],
-  ["Tomate", 42.058345, -87.683724],
-  ["TechExpress", 42.057816, -87.677123], // On Sheridan
-  ["CoffeeLab", 42.058455, -87.683737],
-  ["Starbucks",42.049677, -87.681824],
+  //["Study", 0, 0],
+  //["Tomate", 42.058345, -87.683724],
+  //["TechExpress", 42.057816, -87.677123], // On Sheridan
+  //["CoffeeLab", 42.058455, -87.683737],
+  //["Starbucks",42.049677, -87.681824],
   //["BlazePizza", 42.049614, -87.681795],
-  ["Panera", 42.048555, -87.681854],
+  //["Panera", 42.048555, -87.681854],
   //["OliveMediterraneanGrill", 42.049461, -87.681816],
   //["AndysFrozenCustard", 42.048445, -87.681425],
   //["Tech Express", 42.057958, -87.674735], // By Mudd
+  ["Lisa's", 42.060271, -87.675804]
 ]
 
 
@@ -289,10 +296,12 @@ function postMeetingPoints(MeetingPoints) {
 /* To populate all, first post locations/meeting points. Then, use postman to find the 
 _id of each location and set is as the id of the items, then run again with postItems uncommented*/
 
-//postLocations(locations);
+postLocations(locations);
 //postMeetingPoints(meetingPoints);
-postItems("Tomate", tomateItems, "5cda48786151300016ad8826", "5ccb7e1d857f2e0f94244994");
-postItems("TechExpress", techExpressItems, "5cda48786151300016ad8825", "5ccb7e1d857f2e0f94244993");
-postItems("CoffeeLab", coffeeLabItems, "5cda48786151300016ad8824", "5ccb7e1d857f2e0f94244995");
-postItems("Starbucks", starbucksItems, "5cda48786151300016ad8828", "5ccb7e1d857f2e0f94244997");
-postItems("Panera", paneraItems, "5cda48786151300016ad8823", "5ccb7e1d857f2e0f94244996");
+
+//postItems("Lisa's", lisasItems, "", "5cf4a4cb88e4b5582663e3be")
+//postItems("Tomate", tomateItems, "5cda48786151300016ad8826", "5ccb7e1d857f2e0f94244994");
+//postItems("TechExpress", techExpressItems, "5cda48786151300016ad8825", "5ccb7e1d857f2e0f94244993");
+//postItems("CoffeeLab", coffeeLabItems, "5cda48786151300016ad8824", "5ccb7e1d857f2e0f94244995");
+//postItems("Starbucks", starbucksItems, "5cda48786151300016ad8828", "5ccb7e1d857f2e0f94244997");
+//postItems("Panera", paneraItems, "5cda48786151300016ad8823", "5ccb7e1d857f2e0f94244996");
