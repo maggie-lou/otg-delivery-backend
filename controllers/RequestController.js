@@ -41,7 +41,7 @@ router.route('/')
 
   //GET: Return requests
   .get((req, res) => {
-    console.log("GET: /request");
+    //console.log("GET: /request");
     const {ObjectId} = require('mongodb');
     //const status = req.query.status || "";
     let excludingRequesterId = req.query.excluding || "000000000000000000000000";
@@ -50,7 +50,7 @@ router.route('/')
     Request.find({
       //'endTime': {$gte: Date.now()},
       //'status': new RegExp(status),
-      'status': {$ne: "Completed"},
+      'status': {$ne: "Completed", $ne: "Expired"},
       'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
       .populate('requester')
@@ -154,7 +154,7 @@ router.route('/:id/status')
             return;
           } else {
             request.status = req.body.status;
-            request.save( (e) => {
+            request.save((e) => {
               if(e) {
                 res.status(400);
                 res.send(`Could not update status for request ${req.params.id} to ${req.body.status}`);

@@ -66,11 +66,11 @@ router.route('/all')
 
 router.route('/:id/requests')
   .get(function(req, res) {
-    console.log("GET: /users/" + req.params.id +"/requests");
+    //console.log("GET: /users/" + req.params.id +"/requests");
 
     // Open and expired
     // OR Non-Pending, non-completed
-    Request.find({requester: req.params.id, status: {$ne: "Completed"}})
+    Request.find({requester: req.params.id, status: {$ne: "Completed", $ne: "Expired"}})
       .populate('orderDescription')
       .populate('requester')
       .populate('helper')
