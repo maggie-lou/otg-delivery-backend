@@ -50,7 +50,7 @@ router.route('/')
     Request.find({
       //'endTime': {$gte: Date.now()},
       //'status': new RegExp(status),
-      'status': {$ne: "Completed", $ne: "Expired"},
+      'status': {$nin: ["Completed", "Expired"]},
       'requester': {$ne: excludingRequesterId}, //not returning requester's requests
     })
       .populate('requester')

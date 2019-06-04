@@ -70,7 +70,10 @@ router.route('/:id/requests')
 
     // Open and expired
     // OR Non-Pending, non-completed
-    Request.find({requester: req.params.id, status: {$ne: "Completed", $ne: "Expired"}})
+    Request.find({
+        requester: req.params.id, 
+        status: {$nin: ["Completed", "Expired"]}
+      })
       .populate('orderDescription')
       .populate('requester')
       .populate('helper')

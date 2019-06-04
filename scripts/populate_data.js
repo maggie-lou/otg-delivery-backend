@@ -296,12 +296,12 @@ function postMeetingPoints(MeetingPoints) {
 /* To populate all, first post locations/meeting points. Then, use postman to find the 
 _id of each location and set is as the id of the items, then run again with postItems uncommented*/
 
-postLocations(locations);
+//postLocations(locations);
 //postMeetingPoints(meetingPoints);
 
-//postItems("Lisa's", lisasItems, "", "5cf4a4cb88e4b5582663e3be")
+postItems("Lisa's", lisasItems, "5cf4a4cb88e4b5582663e3be", "5cf5b7e0764bc4414aee7449")
 //postItems("Tomate", tomateItems, "5cda48786151300016ad8826", "5ccb7e1d857f2e0f94244994");
-//postItems("TechExpress", techExpressItems, "5cda48786151300016ad8825", "5ccb7e1d857f2e0f94244993");
+//postItems("TechExpress", techExpressItems, "", "5ccb7e1d857f2e0f94244993");
 //postItems("CoffeeLab", coffeeLabItems, "5cda48786151300016ad8824", "5ccb7e1d857f2e0f94244995");
 //postItems("Starbucks", starbucksItems, "5cda48786151300016ad8828", "5ccb7e1d857f2e0f94244997");
 //postItems("Panera", paneraItems, "5cda48786151300016ad8823", "5ccb7e1d857f2e0f94244996");
