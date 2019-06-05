@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.route('/')
   .post(function(req, res){
-    //console.log("POST: /locupdates");
+    console.log(`POST: /locupdates for ${req.body.userId}`);
+    //console.log(`(${req.body.latitude}, ${req.body.longitude})`);
 
     var locationUpdate = new LocationUpdate();
     locationUpdate.latitude = req.body.latitude;
