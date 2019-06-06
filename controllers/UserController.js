@@ -188,6 +188,17 @@ router.route('/sendNotification')
       console.log(msg);
     })
 
+router.route('/sendNotifications')
+  .post(function(req, res){
+    console.log("POST: /users/sendNotifications");
+    for (id of JSON.parse(req.body.deviceIds)) {
+      PushController.sendPushWithMessage(id, req.body.message);
+      const msg = "Sent notification to Device Id " + id;
+      res.send(msg);
+      console.log(msg);
+    }
+  })
+
 router.route('/sendToMe')
   .post(function(req, res){
     console.log("POST: /users/sendToMe");

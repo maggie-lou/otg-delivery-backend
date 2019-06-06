@@ -28,7 +28,7 @@ router.route('/')
       request.eta = req.body.eta;
 
       //save request
-      request.save(function(err, savedReq){
+      request.save((err, savedReq) => {
         if (err){
             console.log("Error creating new request");
             console.log(err);

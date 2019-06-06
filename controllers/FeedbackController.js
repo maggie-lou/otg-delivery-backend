@@ -24,11 +24,8 @@ router.route('/')
 
       feedback.save(function(error){
           res.status(200);
-          res.send("Feedback added!")
       });
-
   });
-
 
 router.route('/sendPush')
   .post(function(req, res) {
