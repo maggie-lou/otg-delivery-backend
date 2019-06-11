@@ -153,6 +153,11 @@ router.route('/:id/status')
             res.send(err);
             return;
           } else {
+            if (request === null) {
+              res.status(400);
+              res.send(`Could not update status for request ${req.params.id} to ${req.body.status}`);
+              return;
+            }
             request.status = req.body.status;
             request.save((e) => {
               if(e) {
